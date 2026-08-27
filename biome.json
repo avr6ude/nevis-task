@@ -24,6 +24,12 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
+      "complexity": {
+        "noImportantStyles": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
       "a11y": {
         "preset": "recommended",
         "noStaticElementInteractions": "error",

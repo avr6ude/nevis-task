@@ -4,9 +4,16 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "module": "esnext",
-    "types": ["vite/client", "vitest/globals"],
+    "types": ["vite/client"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
+
+    "paths": {
+      "@/*": ["./src/*"],
+      "@api/*": ["./src/api/*"],
+      "@domain/*": ["./src/domain/*"],
+      "@components/*": ["./src/components/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
