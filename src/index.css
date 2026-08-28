@@ -3,8 +3,7 @@
   --color-surface: #ffffff;
 
   --color-ink: #141413;
-  --color-ink-secondary: rgba(20, 20, 19, 0.6);
-  --color-ink-tertiary: rgba(20, 20, 19, 0.4);
+  --color-ink-secondary: rgba(20, 20, 19, 0.65);
 
   --color-line: rgba(20, 20, 19, 0.08);
   --color-line-strong: rgba(20, 20, 19, 0.16);
