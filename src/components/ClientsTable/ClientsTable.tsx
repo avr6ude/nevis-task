@@ -277,7 +277,6 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                             ? `Collapse ${node.name}`
                             : `Expand ${node.name}`
                         }
-                        aria-expanded={expanded}
                         className="clients-table__expand-btn"
                         onPress={() => {
                           toggle(node.id);
