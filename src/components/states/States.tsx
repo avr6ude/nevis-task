@@ -1,4 +1,5 @@
 import { ApiError, type ApiErrorKind } from "@api/client";
+import { MONTHS } from "@domain/clients";
 import { Button } from "react-aria-components";
 import "./States.css";
 
@@ -7,12 +8,14 @@ const BAR_HEIGHTS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94];
 export function ChartSkeleton() {
   return (
     <div className="skeleton__bars" aria-hidden="true">
-      {BAR_HEIGHTS.map((height, i) => (
+      {MONTHS.map((month, i) => (
         <span
-          // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length placeholder bars
-          key={i}
+          key={month}
           className="skeleton__bar"
-          style={{ height: `${height}%`, animationDelay: `${i * 60}ms` }}
+          style={{
+            height: `${BAR_HEIGHTS[i]}%`,
+            animationDelay: `${i * 60}ms`,
+          }}
         />
       ))}
     </div>
