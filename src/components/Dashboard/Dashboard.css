@@ -11,3 +11,10 @@
 .dashboard__panel--table {
   padding: 8px 0;
 }
+
+.dashboard__chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 360px;
+}

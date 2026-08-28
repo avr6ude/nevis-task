@@ -1,45 +1,75 @@
 import { useClients } from "@api/useClients";
 import { ChannelBarChart } from "@components/ChannelBarChart/ChannelBarChart";
-import { ClientsTable } from "@components/ClientsTable/ClientsTable";
-import { ErrorState, LoadingState } from "@components/states/States";
+import {
+  ClientsTable,
+  ClientsTableShell,
+} from "@components/ClientsTable/ClientsTable";
+import {
+  ChartSkeleton,
+  ChartUnavailable,
+  DataError,
+  TableSkeleton,
+} from "@components/states/States";
 import { toChannelStack } from "@domain/channelStack";
 import { useMemo } from "react";
-import type { ClientNode } from "@/types";
 import "./Dashboard.css";
 
 export function Dashboard() {
-  const tree = useClients();
+  const clients = useClients();
+  const root = clients.data;
+
+  const stack = useMemo(
+    () => (root ? toChannelStack(root) : undefined),
+    [root],
+  );
+
+  const scope = root?.name ?? "all clients";
 
   return (
     <div className="page">
       <h1 className="page__title">Clients</h1>
-      {tree.status === "loading" && <LoadingState />}
-      {tree.status === "error" && (
-        <ErrorState error={tree.error} onRetry={tree.refetch} />
+
+      {clients.status === "loading" && (
+        <span className="visually-hidden" role="status" aria-live="polite">
+          Loading client data…
+        </span>
       )}
-      {tree.status === "ok" && <DashboardContent root={tree.data} />}
-    </div>
-  );
-}
 
-function DashboardContent({ root }: { root: ClientNode }) {
-  const stack = useMemo(() => toChannelStack(root), [root]);
+      <div className="dashboard">
+        <section
+          className="card dashboard__panel"
+          aria-label={`Client trend for ${scope}`}
+        >
+          {root && stack ? (
+            <ChannelBarChart data={stack} scopeLabel={root.name} />
+          ) : (
+            <div className="dashboard__chart-placeholder">
+              {clients.status === "loading" ? (
+                <ChartSkeleton />
+              ) : (
+                <ChartUnavailable />
+              )}
+            </div>
+          )}
+        </section>
 
-  return (
-    <div className="dashboard">
-      <section
-        className="card dashboard__panel"
-        aria-label={`Client trend for ${root.name}`}
-      >
-        <ChannelBarChart data={stack} scopeLabel={root.name} />
-      </section>
-
-      <section
-        className="card dashboard__panel dashboard__panel--table"
-        aria-label={`Client breakdown for ${root.name}`}
-      >
-        <ClientsTable root={root} />
-      </section>
+        <section
+          className="card dashboard__panel dashboard__panel--table"
+          aria-label={`Client breakdown for ${scope}`}
+        >
+          {root ? (
+            <ClientsTable root={root} />
+          ) : (
+            <ClientsTableShell>
+              {clients.status === "loading" ? (
+                <TableSkeleton />
+              ) : (
+                <DataError error={clients.error} onRetry={clients.refetch} />
+              )}
+            </ClientsTableShell>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

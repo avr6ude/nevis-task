@@ -2,6 +2,7 @@ import { Avatar } from "@components/Avatar/Avatar";
 import { getChildren, MONTHS } from "@domain/clients";
 import {
   type KeyboardEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -18,6 +19,40 @@ export interface ClientsTableProps {
 }
 
 const ADVISER_LEVEL = 3;
+
+function MonthHeader() {
+  return (
+    <thead>
+      <tr>
+        <th scope="col" className="clients-table__name-col">
+          Name
+        </th>
+        {MONTHS.map((month) => (
+          <th scope="col" key={month}>
+            {month}
+          </th>
+        ))}
+      </tr>
+    </thead>
+  );
+}
+
+/**
+ * The table shell with its month columns but no rows. Keeps the page from
+ * collapsing while the data is loading or after it failed.
+ */
+export function ClientsTableShell({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <div className="clients-table-container">
+        <table className="clients-table">
+          <MonthHeader />
+        </table>
+      </div>
+      <div className="clients-table__slot">{children}</div>
+    </>
+  );
+}
 
 interface FlatRow {
   node: ClientNode;
@@ -191,22 +226,7 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
         aria-label="Clients by company, branch, adviser and acquisition channel"
         className="clients-table"
       >
-        <thead>
-          <tr role="row">
-            <th
-              role="columnheader"
-              scope="col"
-              className="clients-table__name-col"
-            >
-              Name
-            </th>
-            {MONTHS.map((month) => (
-              <th role="columnheader" scope="col" key={month}>
-                {month}
-              </th>
-            ))}
-          </tr>
-        </thead>
+        <MonthHeader />
 
         <tbody>
           {rows.map((row, index) => {

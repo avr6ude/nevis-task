@@ -46,6 +46,10 @@
   text-align: left;
 }
 
+.clients-table__slot {
+  padding: 0 24px 0 16px;
+}
+
 .clients-table__row {
   height: var(--row-h);
   border-bottom: 1px solid var(--color-line);

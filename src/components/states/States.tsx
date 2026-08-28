@@ -2,42 +2,37 @@ import { ApiError, type ApiErrorKind } from "@api/client";
 import { Button } from "react-aria-components";
 import "./States.css";
 
-export function LoadingState() {
+const BAR_HEIGHTS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94];
+
+export function ChartSkeleton() {
   return (
-    <div className="state" role="status" aria-live="polite">
-      <span className="visually-hidden">Loading client data…</span>
+    <div className="skeleton__bars" aria-hidden="true">
+      {BAR_HEIGHTS.map((height, i) => (
+        <span
+          // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length placeholder bars
+          key={i}
+          className="skeleton__bar"
+          style={{ height: `${height}%`, animationDelay: `${i * 60}ms` }}
+        />
+      ))}
+    </div>
+  );
+}
 
-      <div className="card state__panel" aria-hidden="true">
-        <div className="state__bars">
-          {[62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94].map(
-            (height, i) => (
-              <span
-                // biome-ignore lint/suspicious/noArrayIndexKey: fixed-length placeholder bars
-                key={i}
-                className="state__bar"
-                style={{ height: `${height}%`, animationDelay: `${i * 60}ms` }}
-              />
-            ),
-          )}
+export function TableSkeleton() {
+  return (
+    <div className="skeleton__rows" aria-hidden="true">
+      {[0, 1, 2, 3].map((row) => (
+        <div key={row} className="skeleton__row">
+          <span
+            className="skeleton__line skeleton__line--name"
+            style={{ marginLeft: row === 0 ? 0 : 28 }}
+          />
+          {[0, 1, 2, 3, 4, 5].map((cell) => (
+            <span key={cell} className="skeleton__line skeleton__line--value" />
+          ))}
         </div>
-      </div>
-
-      <div className="card state__panel state__panel--rows" aria-hidden="true">
-        {[0, 1, 2, 3].map((row) => (
-          <div key={row} className="state__row">
-            <span
-              className="state__line state__line--name"
-              style={{ marginLeft: `${row === 0 ? 0 : 28}px` }}
-            />
-            <span className="state__line state__line--value" />
-            <span className="state__line state__line--value" />
-            <span className="state__line state__line--value" />
-            <span className="state__line state__line--value" />
-            <span className="state__line state__line--value" />
-            <span className="state__line state__line--value" />
-          </div>
-        ))}
-      </div>
+      ))}
     </div>
   );
 }
@@ -51,8 +46,7 @@ interface ErrorCopy {
 const MESSAGES: Record<ApiErrorKind, ErrorCopy> = {
   network: {
     title: "Can’t reach the server",
-    detail:
-      "The client data service isn’t responding. Check your connection, then try again.",
+    detail: "Check your connection, then try again.",
     offline: true,
   },
   server: {
@@ -71,34 +65,45 @@ const MESSAGES: Record<ApiErrorKind, ErrorCopy> = {
 
 const FALLBACK: ErrorCopy = {
   title: "Couldn’t load the client data",
-  detail: "Something went wrong on the way. Try again in a moment.",
+  detail: "Something went wrong on the way.",
 };
 
-export interface ErrorStateProps {
+export interface DataErrorProps {
   error?: Error;
   onRetry: () => void;
 }
 
-export function ErrorState({ error, onRetry }: ErrorStateProps) {
+/** Shown in place of the table rows when the request fails. */
+export function DataError({ error, onRetry }: DataErrorProps) {
   const copy = error instanceof ApiError ? MESSAGES[error.kind] : FALLBACK;
   const status = error instanceof ApiError ? error.status : undefined;
 
   return (
-    <div className="card state__error" role="alert">
-      <span className="state__glyph" aria-hidden="true">
+    <div className="data-error" role="alert">
+      <span className="data-error__glyph" aria-hidden="true">
         {copy.offline ? <OfflineIcon /> : <AlertIcon />}
       </span>
 
-      <h2 className="state__title">{copy.title}</h2>
-      <p className="state__detail">{copy.detail}</p>
+      <div className="data-error__text">
+        <p className="data-error__title">{copy.title}</p>
+        <p className="data-error__detail">
+          {copy.detail}
+          {status !== undefined && (
+            <span className="data-error__code"> (error {status})</span>
+          )}
+        </p>
+      </div>
 
-      <Button className="state__retry" onPress={onRetry}>
+      <Button className="data-error__retry" onPress={onRetry}>
         Try again
       </Button>
-
-      {status !== undefined && <p className="state__code">Error {status}</p>}
     </div>
   );
+}
+
+/** Quiet placeholder for the chart, which has no numbers to draw. */
+export function ChartUnavailable() {
+  return <p className="chart-unavailable">No data to chart yet.</p>;
 }
 
 function AlertIcon() {
