@@ -1,9 +1,5 @@
 import type { ClientNode } from "@/types";
 
-/**
- * Only two outcomes change what someone can do about it: they are offline, or
- * the request failed for a reason on our side. `status` is kept for logging.
- */
 export type ApiErrorKind = "offline" | "failed";
 
 export class ApiError extends Error {
