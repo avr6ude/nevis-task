@@ -23,12 +23,12 @@ const ADVISER_LEVEL = 3;
 function MonthHeader() {
   return (
     <thead>
-      <tr>
-        <th scope="col" className="clients-table__name-col">
+      <tr role="row">
+        <th role="columnheader" scope="col" className="clients-table__name-col">
           Name
         </th>
         {MONTHS.map((month) => (
-          <th scope="col" key={month}>
+          <th role="columnheader" scope="col" key={month}>
             {month}
           </th>
         ))}
