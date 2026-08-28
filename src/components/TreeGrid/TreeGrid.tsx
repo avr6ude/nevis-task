@@ -189,7 +189,6 @@ export function TreeGrid({ root, defaultExpandedIds }: TreeGridProps) {
       <table
         role="treegrid"
         aria-label="Clients by company, branch, adviser and acquisition channel"
-        aria-rowcount={rows.length + 1}
         className="tree-grid"
       >
         <thead>
@@ -216,6 +215,7 @@ export function TreeGrid({ root, defaultExpandedIds }: TreeGridProps) {
                 ref={(element) => setRowRef(node.id, element)}
                 role="row"
                 tabIndex={isFocused ? 0 : -1}
+                aria-label={node.name}
                 aria-level={level}
                 aria-expanded={hasChildren ? expanded : undefined}
                 onFocus={() => setFocusedId(node.id)}

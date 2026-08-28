@@ -22,6 +22,9 @@ export interface ChannelBarChartProps {
 
 const MARGIN = { top: 8, right: 8, bottom: 28, left: 36 } as const;
 
+const FULL_LABEL_WIDTH = 68;
+const SHORT_LABEL_WIDTH = 34;
+
 const colorScale = scaleOrdinal<ChannelKey, string>({
   domain: [...CHANNEL_KEYS],
   range: ["var(--color-existing)", "var(--color-organic)", "var(--color-paid)"],
@@ -122,10 +125,18 @@ function InnerChart({
     };
   }, [xScale, data, showTooltip, hideTooltip]);
 
+  const shortLabels = innerWidth < 640;
+  const labelWidth = shortLabels ? SHORT_LABEL_WIDTH : FULL_LABEL_WIDTH;
+  const stride = Math.max(
+    1,
+    Math.ceil(data.length / Math.max(1, Math.floor(innerWidth / labelWidth))),
+  );
   const tickValues =
-    innerWidth < 520
-      ? data.filter((_, i) => i % 2 === 0).map((d) => d.month)
+    stride > 1
+      ? data.filter((_, i) => i % stride === 0).map((d) => d.month)
       : undefined;
+  const formatTick = (month: string) =>
+    shortLabels ? month.slice(0, 3) : month;
 
   return (
     <div className="chart__svg-wrap" ref={wrapRef}>
@@ -220,6 +231,7 @@ function InnerChart({
             hideAxisLine
             hideTicks
             tickValues={tickValues}
+            tickFormat={formatTick}
             tickLabelProps={() => ({
               fill: "var(--color-ink-secondary)",
               fontSize: 12,

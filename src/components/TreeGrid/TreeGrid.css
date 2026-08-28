@@ -98,7 +98,7 @@
   border-radius: 4px;
   padding: 0;
   cursor: pointer;
-  color: var(--color-ink-tertiary);
+  color: var(--color-ink-secondary);
 }
 
 .tree-grid__expand-btn:hover {

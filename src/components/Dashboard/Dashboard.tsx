@@ -32,7 +32,10 @@ function DashboardContent({ root }: { root: TreeNode }) {
         <ChannelBarChart data={stack} scopeLabel={root.name} />
       </section>
 
-      <section className="card dashboard__panel dashboard__panel--table">
+      <section
+        className="card dashboard__panel dashboard__panel--table"
+        aria-label={`Client breakdown for ${root.name}`}
+      >
         <TreeGrid root={root} />
       </section>
     </div>
