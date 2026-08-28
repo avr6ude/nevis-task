@@ -26,7 +26,7 @@ export function Dashboard() {
   const scope = root?.name ?? "all clients";
 
   return (
-    <div className="page">
+    <main className="page">
       <h1 className="page__title">Clients</h1>
 
       <span className="visually-hidden" role="status" aria-live="polite">
@@ -69,6 +69,6 @@ export function Dashboard() {
           )}
         </section>
       </div>
-    </div>
+    </main>
   );
 }
