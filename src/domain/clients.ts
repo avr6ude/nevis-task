@@ -1,4 +1,4 @@
-import type { TreeNode } from "@/types";
+import type { ClientNode } from "@/types";
 
 export const MONTHS = [
   "Feb 2024",
@@ -15,11 +15,11 @@ export const MONTHS = [
   "Jan 2025",
 ] as const;
 
-export function getChildren(node: TreeNode): TreeNode[] | undefined {
+export function getChildren(node: ClientNode): ClientNode[] | undefined {
   return node.branches ?? node.employees ?? node.channels;
 }
 
-export function findNode(root: TreeNode, id: string): TreeNode | undefined {
+export function findNode(root: ClientNode, id: string): ClientNode | undefined {
   if (root.id === id) return root;
   for (const child of getChildren(root) ?? []) {
     const hit = findNode(child, id);

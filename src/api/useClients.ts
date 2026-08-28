@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { TreeNode } from "@/types";
-import { fetchTree } from "./client";
+import type { ClientNode } from "@/types";
+import { fetchClients } from "./client";
 
-export type TreeState =
+export type ClientsState =
   | { status: "loading"; data?: undefined; error?: undefined }
-  | { status: "ok"; data: TreeNode; error?: undefined }
+  | { status: "ok"; data: ClientNode; error?: undefined }
   | { status: "error"; data?: undefined; error: Error };
 
-export function useTree(): TreeState & { refetch: () => void } {
-  const [state, setState] = useState<TreeState>({ status: "loading" });
+export function useClients(): ClientsState & { refetch: () => void } {
+  const [state, setState] = useState<ClientsState>({ status: "loading" });
   const reload = useRef<() => void>(() => {});
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export function useTree(): TreeState & { refetch: () => void } {
       const { signal } = controller;
 
       setState({ status: "loading" });
-      fetchTree(signal)
+      fetchClients(signal)
         .then((data) => {
           if (!signal.aborted) setState({ status: "ok", data });
         })

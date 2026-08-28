@@ -1,26 +1,28 @@
-import { useTree } from "@api/useTree";
+import { useClients } from "@api/useClients";
 import { ChannelBarChart } from "@components/ChannelBarChart/ChannelBarChart";
+import { ClientsTable } from "@components/ClientsTable/ClientsTable";
 import { ErrorState, LoadingState } from "@components/states/States";
-import { TreeGrid } from "@components/TreeGrid/TreeGrid";
 import { toChannelStack } from "@domain/channelStack";
 import { useMemo } from "react";
-import type { TreeNode } from "@/types";
+import type { ClientNode } from "@/types";
 import "./Dashboard.css";
 
 export function Dashboard() {
-  const tree = useTree();
+  const tree = useClients();
 
   return (
     <div className="page">
       <h1 className="page__title">Clients</h1>
       {tree.status === "loading" && <LoadingState />}
-      {tree.status === "error" && <ErrorState onRetry={tree.refetch} />}
+      {tree.status === "error" && (
+        <ErrorState error={tree.error} onRetry={tree.refetch} />
+      )}
       {tree.status === "ok" && <DashboardContent root={tree.data} />}
     </div>
   );
 }
 
-function DashboardContent({ root }: { root: TreeNode }) {
+function DashboardContent({ root }: { root: ClientNode }) {
   const stack = useMemo(() => toChannelStack(root), [root]);
 
   return (
@@ -36,7 +38,7 @@ function DashboardContent({ root }: { root: TreeNode }) {
         className="card dashboard__panel dashboard__panel--table"
         aria-label={`Client breakdown for ${root.name}`}
       >
-        <TreeGrid root={root} />
+        <ClientsTable root={root} />
       </section>
     </div>
   );

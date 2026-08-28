@@ -1,9 +1,9 @@
-export interface TreeNode {
+export interface ClientNode {
   id: string;
   name: string;
   values: number[];
   image?: string;
-  branches?: TreeNode[];
-  employees?: TreeNode[];
-  channels?: TreeNode[];
+  branches?: ClientNode[];
+  employees?: ClientNode[];
+  channels?: ClientNode[];
 }

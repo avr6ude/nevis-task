@@ -1,5 +1,5 @@
-import type { TreeNode } from "@/types";
-import { getChildren, MONTHS } from "./tree";
+import type { ClientNode } from "@/types";
+import { getChildren, MONTHS } from "./clients";
 
 export const CHANNEL_KEYS = ["existing", "organic", "paid"] as const;
 export type ChannelKey = (typeof CHANNEL_KEYS)[number];
@@ -26,11 +26,11 @@ function addInto(acc: number[], values: number[]): void {
   }
 }
 
-export function toChannelStack(focus: TreeNode): ChannelStackDatum[] {
+export function toChannelStack(focus: ClientNode): ChannelStackDatum[] {
   const organic = new Array<number>(MONTHS.length).fill(0);
   const paid = new Array<number>(MONTHS.length).fill(0);
 
-  const visit = (node: TreeNode): void => {
+  const visit = (node: ClientNode): void => {
     if (node.name === NEW_ORGANIC) addInto(organic, node.values);
     else if (node.name === NEW_PAID) addInto(paid, node.values);
     for (const child of getChildren(node) ?? []) visit(child);

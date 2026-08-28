@@ -1,0 +1,126 @@
+.clients-table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.clients-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 900px;
+  font-size: 14px;
+  color: var(--color-ink);
+}
+
+.clients-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-surface);
+  text-align: right;
+  font-weight: 400;
+  color: var(--color-ink-secondary);
+  padding: 16px 8px;
+  border-bottom: 1px solid var(--color-line);
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.clients-table td {
+  padding: 0 8px;
+  vertical-align: middle;
+}
+
+.clients-table th:last-child,
+.clients-table td:last-child {
+  padding-right: 24px;
+}
+
+.clients-table th.clients-table__name-col,
+.clients-table td.clients-table__name-col {
+  width: var(--name-col);
+  min-width: var(--name-col);
+  padding-left: 16px;
+}
+
+.clients-table thead th.clients-table__name-col {
+  text-align: left;
+}
+
+.clients-table__row {
+  height: var(--row-h);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.clients-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.clients-table__row--interactive {
+  cursor: pointer;
+}
+
+.clients-table__row--interactive:hover {
+  background: var(--color-row-hover);
+}
+
+.clients-table__cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--row-h);
+}
+
+.clients-table__name {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clients-table__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--color-ink);
+}
+
+.clients-table__expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-ink-secondary);
+}
+
+.clients-table__expand-btn:hover {
+  color: var(--color-ink);
+}
+
+.clients-table__expand-placeholder {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.clients-table__chevron {
+  display: inline-flex;
+  transition: transform 0.12s ease;
+}
+
+.clients-table__chevron svg {
+  display: block;
+}
+
+.clients-table__chevron--open {
+  transform: rotate(90deg);
+}

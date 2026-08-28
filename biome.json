@@ -44,7 +44,7 @@
   },
   "overrides": [
     {
-      "includes": ["src/components/TreeGrid/**"],
+      "includes": ["src/components/ClientsTable/**"],
       "linter": {
         "rules": {
           "a11y": {
