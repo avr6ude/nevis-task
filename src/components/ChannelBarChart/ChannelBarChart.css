@@ -1,0 +1,60 @@
+.chart {
+  margin: 0;
+}
+
+.chart__plot {
+  width: 100%;
+}
+
+.chart__svg-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.chart__svg-wrap svg {
+  display: block;
+  overflow: visible;
+}
+
+.chart__tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--color-ink);
+  color: var(--color-surface);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  line-height: 1.4;
+  box-shadow: 0 6px 18px rgba(20, 20, 19, 0.18);
+  min-width: 120px;
+}
+
+.chart__tooltip-title {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.chart__tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.chart__tooltip-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart__tooltip-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex: 0 0 auto;
+}
+
+.chart__tooltip-meta {
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.6);
+}
