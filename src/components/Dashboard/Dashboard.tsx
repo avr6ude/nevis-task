@@ -29,11 +29,10 @@ export function Dashboard() {
     <div className="page">
       <h1 className="page__title">Clients</h1>
 
-      {clients.status === "loading" && (
-        <span className="visually-hidden" role="status" aria-live="polite">
-          Loading client data…
-        </span>
-      )}
+      <span className="visually-hidden" role="status" aria-live="polite">
+        {clients.status === "loading" && "Loading client data…"}
+        {clients.status === "ok" && "Client data loaded."}
+      </span>
 
       <div className="dashboard">
         <section
