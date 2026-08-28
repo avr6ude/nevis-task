@@ -321,13 +321,13 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                   </div>
                 </td>
 
-                {node.values.map((value, valueIndex) => (
+                {MONTHS.map((month, monthIndex) => (
                   <td
                     role="gridcell"
-                    key={MONTHS[valueIndex]}
+                    key={month}
                     className="clients-table__value"
                   >
-                    {value.toLocaleString()}
+                    {node.values[monthIndex]?.toLocaleString() ?? "—"}
                   </td>
                 ))}
               </tr>
