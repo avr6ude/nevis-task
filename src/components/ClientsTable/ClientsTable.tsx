@@ -1,4 +1,5 @@
 import { Avatar } from "@components/Avatar/Avatar";
+import { ChevronRight } from "@components/icons/ChevronRight";
 import { getChildren, MONTHS } from "@domain/clients";
 import {
   type KeyboardEvent,
@@ -282,31 +283,13 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                           focusRow(node.id);
                         }}
                       >
-                        <span
-                          aria-hidden="true"
+                        <ChevronRight
                           className={
                             expanded
                               ? "clients-table__chevron clients-table__chevron--open"
                               : "clients-table__chevron"
                           }
-                        >
-                          <svg
-                            width="10"
-                            height="10"
-                            viewBox="0 0 10 10"
-                            fill="none"
-                            aria-hidden="true"
-                            focusable="false"
-                          >
-                            <path
-                              d="M3.5 1.5 L7 5 L3.5 8.5"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </span>
+                        />
                       </Button>
                     ) : (
                       <span

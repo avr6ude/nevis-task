@@ -121,12 +121,8 @@
 }
 
 .clients-table__chevron {
-  display: inline-flex;
-  transition: transform 0.12s ease;
-}
-
-.clients-table__chevron svg {
   display: block;
+  transition: transform 0.12s ease;
 }
 
 .clients-table__chevron--open {
