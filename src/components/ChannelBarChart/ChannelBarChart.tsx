@@ -309,7 +309,8 @@ export function ChannelBarChart({
     <figure className="chart">
       <figcaption className="visually-hidden">
         Stacked bar chart of monthly client counts for {scopeLabel}, split by
-        acquisition channel. The same figures are in the table below.
+        acquisition channel. The monthly totals it draws are listed in the table
+        below; the channel split is only shown here and in the chart tooltip.
       </figcaption>
       <div className="chart__plot" style={{ height }} ref={plotRef}>
         {width > 0 && <InnerChart data={data} width={width} height={height} />}
