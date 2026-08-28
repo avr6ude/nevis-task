@@ -22,16 +22,15 @@ Query params to check the UI states, forwarded by the client from its own URL:
 | URL | State |
 | --- | --- |
 | `/?delay=6000` | loading |
-| `/?fail=1` | server error |
-| `/?fail=404` | request error |
+| `/?fail=1` | error |
 
 ## Added, not in the design
 
 - **Loading and error states.** The shell always renders: title, both cards,
   month columns. Only the data area changes. Errors show in the table where the
   first row would be, with retry. A failed request never blanks the page.
-- **Four error messages** for no connection, server error, rejected request and
-  unreadable response.
+- **Two error messages**, offline and everything else, since that is the only
+  difference that changes what someone can do about it.
 - **Keyboard support.** Arrows move, left and right collapse and expand, Enter
   and Space toggle, Home and End jump. `treegrid` with level and expanded state
   on each row, so the hierarchy reaches screen readers.

@@ -79,11 +79,6 @@
   color: var(--color-ink-secondary);
 }
 
-.data-error__code {
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink-tertiary);
-}
-
 .data-error__retry {
   margin-top: 20px;
   border: none;

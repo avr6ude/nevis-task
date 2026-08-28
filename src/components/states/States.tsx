@@ -43,28 +43,14 @@ interface ErrorCopy {
 }
 
 const MESSAGES: Record<ApiErrorKind, ErrorCopy> = {
-  network: {
-    title: "No connection",
-    detail:
-      "We couldn't reach the server. Check your connection and try again.",
+  offline: {
+    title: "You're offline",
+    detail: "Check your connection, then try again.",
   },
-  server: {
+  failed: {
     title: "Couldn't load clients",
-    detail: "The server ran into a problem. This is usually temporary.",
+    detail: "Something went wrong on our end. Try again in a moment.",
   },
-  request: {
-    title: "Nothing to show",
-    detail: "The server didn't return this dataset.",
-  },
-  parse: {
-    title: "Couldn't read the response",
-    detail: "The server replied with something we didn't expect.",
-  },
-};
-
-const FALLBACK: ErrorCopy = {
-  title: "Couldn't load clients",
-  detail: "Something went wrong along the way.",
 };
 
 export interface DataErrorProps {
@@ -74,18 +60,13 @@ export interface DataErrorProps {
 
 /** Shown in place of the table rows when the request fails. */
 export function DataError({ error, onRetry }: DataErrorProps) {
-  const copy = error instanceof ApiError ? MESSAGES[error.kind] : FALLBACK;
-  const status = error instanceof ApiError ? error.status : undefined;
+  const copy =
+    error instanceof ApiError ? MESSAGES[error.kind] : MESSAGES.failed;
 
   return (
     <div className="data-error" role="alert">
       <p className="data-error__title">{copy.title}</p>
-      <p className="data-error__detail">
-        {copy.detail}
-        {status !== undefined && (
-          <span className="data-error__code"> (error {status})</span>
-        )}
-      </p>
+      <p className="data-error__detail">{copy.detail}</p>
       <Button className="data-error__retry" onPress={onRetry}>
         Try again
       </Button>

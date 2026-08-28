@@ -1,6 +1,10 @@
 import type { ClientNode } from "@/types";
 
-export type ApiErrorKind = "network" | "server" | "request" | "parse";
+/**
+ * Only two outcomes change what someone can do about it: they are offline, or
+ * the request failed for a reason on our side. `status` is kept for logging.
+ */
+export type ApiErrorKind = "offline" | "failed";
 
 export class ApiError extends Error {
   kind: ApiErrorKind;
@@ -34,16 +38,16 @@ export async function fetchClients(signal?: AbortSignal): Promise<ClientNode> {
     res = await fetch(`/api/clients${debugQuery()}`, { signal });
   } catch (error) {
     if (signal?.aborted) throw error;
-    throw new ApiError("network");
+    throw new ApiError("offline");
   }
 
   if (!res.ok) {
-    throw new ApiError(res.status >= 500 ? "server" : "request", res.status);
+    throw new ApiError("failed", res.status);
   }
 
   try {
     return (await res.json()) as ClientNode;
   } catch {
-    throw new ApiError("parse");
+    throw new ApiError("failed");
   }
 }
