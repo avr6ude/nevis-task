@@ -45,7 +45,12 @@ function MonthHeader() {
 export function ClientsTableShell({ children }: { children: ReactNode }) {
   return (
     <>
-      <div className="clients-table-container">
+      <div
+        className="clients-table-container"
+        tabIndex={0}
+        role="group"
+        aria-label="Month columns"
+      >
         <table className="clients-table">
           <MonthHeader />
         </table>
@@ -221,7 +226,12 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
   }, [rows, focusedId, root.id]);
 
   return (
-    <div className="clients-table-container">
+    <div
+      className="clients-table-container"
+      tabIndex={0}
+      role="group"
+      aria-label="Client table, scrolls horizontally"
+    >
       <table
         role="treegrid"
         aria-label="Clients by company, branch, adviser and acquisition channel"
