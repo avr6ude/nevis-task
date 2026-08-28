@@ -40,32 +40,31 @@ export function TableSkeleton() {
 interface ErrorCopy {
   title: string;
   detail: string;
-  offline?: boolean;
 }
 
 const MESSAGES: Record<ApiErrorKind, ErrorCopy> = {
   network: {
-    title: "Can’t reach the server",
-    detail: "Check your connection, then try again.",
-    offline: true,
+    title: "No connection",
+    detail:
+      "We couldn't reach the server. Check your connection and try again.",
   },
   server: {
-    title: "The server couldn’t return the client data",
-    detail: "Something failed on their side. This is usually temporary.",
+    title: "Couldn't load clients",
+    detail: "The server ran into a problem. This is usually temporary.",
   },
   request: {
-    title: "Client data not found",
-    detail: "The server rejected the request for this dataset.",
+    title: "Nothing to show",
+    detail: "The server didn't return this dataset.",
   },
   parse: {
-    title: "The client data was unreadable",
-    detail: "The server replied, but not with data we could parse.",
+    title: "Couldn't read the response",
+    detail: "The server replied with something we didn't expect.",
   },
 };
 
 const FALLBACK: ErrorCopy = {
-  title: "Couldn’t load the client data",
-  detail: "Something went wrong on the way.",
+  title: "Couldn't load clients",
+  detail: "Something went wrong along the way.",
 };
 
 export interface DataErrorProps {
@@ -80,20 +79,13 @@ export function DataError({ error, onRetry }: DataErrorProps) {
 
   return (
     <div className="data-error" role="alert">
-      <span className="data-error__glyph" aria-hidden="true">
-        {copy.offline ? <OfflineIcon /> : <AlertIcon />}
-      </span>
-
-      <div className="data-error__text">
-        <p className="data-error__title">{copy.title}</p>
-        <p className="data-error__detail">
-          {copy.detail}
-          {status !== undefined && (
-            <span className="data-error__code"> (error {status})</span>
-          )}
-        </p>
-      </div>
-
+      <p className="data-error__title">{copy.title}</p>
+      <p className="data-error__detail">
+        {copy.detail}
+        {status !== undefined && (
+          <span className="data-error__code"> (error {status})</span>
+        )}
+      </p>
       <Button className="data-error__retry" onPress={onRetry}>
         Try again
       </Button>
@@ -104,38 +96,4 @@ export function DataError({ error, onRetry }: DataErrorProps) {
 /** Quiet placeholder for the chart, which has no numbers to draw. */
 export function ChartUnavailable() {
   return <p className="chart-unavailable">No data to chart yet.</p>;
-}
-
-function AlertIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M12 7.5v5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-      <circle cx="12" cy="16" r="1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function OfflineIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
-      <path
-        d="M6.5 18h10a4 4 0 0 0 .6-7.96 6 6 0 0 0-10.9-2.2A4.25 4.25 0 0 0 6.5 18Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-      <path
-        d="m4 4 16 16"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
 }
