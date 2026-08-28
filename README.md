@@ -13,79 +13,51 @@ npm run dev
 Client on http://localhost:5173, API on http://localhost:8787, Vite proxies
 `/api`. `npm run build` type-checks and builds, `npm run lint` runs Biome.
 
-## API
+`GET /api/clients` returns the dataset, photos come from
+`GET /api/avatars/:file`. The client forwards two query params from its own URL
+so the states can be checked by hand: `/?delay=6000` for loading, `/?fail=1` for
+the error. Running without the API (`npm run dev:web`) also errors.
 
-`GET /api/clients` returns the whole dataset. Photos from `GET /api/avatars/:file`.
+## Assumptions
 
-Query params to check the UI states, forwarded by the client from its own URL:
-
-| URL | State |
-| --- | --- |
-| `/?delay=6000` | loading |
-| `/?fail=1` | error |
-
-## Added, not in the design
-
-- **Loading and error states.** The shell always renders: title, both cards,
-  month columns. Only the data area changes. Errors show in the table where the
-  first row would be, with retry. A failed request never blanks the page.
-- **Two error messages**, offline and everything else, since that is the only
-  difference that changes what someone can do about it.
-- **Keyboard support.** Arrows move, left and right collapse and expand, Enter
-  and Space toggle, Home and End jump. `treegrid` with level and expanded state
-  on each row, so the hierarchy reaches screen readers.
-- **Focus styles**, since the design has none.
-- **Down to 375px.** Table scrolls sideways, chart shortens labels to `Feb` and
-  drops every other one.
-- **Chart tooltip.** The small channel bars are 1 to 2px tall, so without it they
-  cannot be read.
-
-## Changed
-
-- **Adviser photos.** The payload is numbers only, so each adviser in
-  `company.json` carries an `image` path and the server serves the files. Falls
-  back to initials.
-- **Visible "Name" header.** The design has "Placeholder" in white on white.
-- **Expand controls only where they do something.** The design puts a chevron on
-  every adviser, four of five have no channels.
-- **Fonts.** Inter from Google Fonts. Founders Grotesk only appears in the
-  invisible placeholder cell, so it is not included.
-
-## Assumed
-
-- The chart stacks the three channels, not each node's children. The legend is a
-  list of channels.
-- The chart always shows the company. Rows have no selected state in the design,
-  so the table drills on its own.
-- Rows are nodes, columns are months. Expanding reveals children.
-- Months run Feb 2024 to Jan 2025, from the brief. The payload has no dates.
-- Whole dataset in one request. Light theme only.
+- **The chart stacks the three channels**, not each node's children, because the
+  legend in the design is a list of channels.
+- **Above adviser level the split is derived.** `organic` and `paid` are summed
+  from below and `existing` is the remainder, so a node with no channel data
+  reads as one full band.
+- **The chart always shows the company.** Rows have no selected state in the
+  design, so the table drills on its own.
+- **Rows are nodes and columns are months.** Expanding a row reveals its
+  children, not a breakdown of a single month.
+- **Adviser photos live in the payload.** The design shows pictures per adviser but
+  the data has none, so I've added an `image` path to `company.json`.
+- **The name column has a visible "Name" header.** In the design that cell reads
+  "Placeholder" in white on white.
+- **Expand controls appear only where they do something.** The design puts a
+  chevron on every adviser, but four of the five have no channels.
 
 ## What I think you got wrong
 
 **The numbers do not add up.** Children do not always sum to their parent:
+Company May 2024 is 301 against 279, Branch 1 Aug 2024 is 214 against 216, and
+Anna Blackwood is off by one or two in five of the twelve months. Each bar uses
+the node's own total and splits channels inside it, so bars match the row above
+them in the table. In practice a parent should either carry a total that agrees
+with its children, or carry none at all and let the client sum them, which is
+cheap and cannot drift.
 
-| Node | Month | Parent | Children |
-| --- | --- | --- | --- |
-| Company | May 2024 | 301 | 279 |
-| Branch 1 | Aug 2024 | 214 | 216 |
-| Anna Blackwood | 5 of 12 months | | off by 1 or 2 |
+**The design shows a channel legend on the company chart,** but channels only
+exist under one adviser, so that split cannot come from the data.
 
-Each bar uses the node's own total and splits channels inside it, so bars match
-the row above them in the table. Adding a column by hand will not always agree.
-
-**Channels only exist for one adviser.** Anna Blackwood is the only node with
-`channels`, but the design shows the channel legend on the company chart. So
-`organic` and `paid` are summed from below and `existing` is the remainder. That
-makes "Existing clients" a bucket holding the real channel plus everyone with no
-channel data, which is why the company chart is nearly one band and Branch 2 and
-3 are a single full bar. They are not really all existing clients.
-
-**The design covers one state and one width,** but the brief asks for loading,
-errors, keyboard and 375px.
+**The design covers one state and one width,** so loading, errors, focus and the
+narrow layout have no reference to match.
 
 ## Next
 
-- Settle what the chart stacks: channels or children.
-- Decide if expanding a row should re-scope the chart.
-- Label the remainder band honestly where there is no channel data.
+- Rescope the chart to the expanded row, once we agree whether it should stack
+  channels or each node's children.
+- Label the remainder band where a node has no channel data, so the chart stops
+  implying those clients are all existing ones.
+- Keep the expanded rows in the URL so a drilled-in view can be shared.
+- Virtualise the table if data becomes heavy in future, and load subtrees on demand
+  (with cursor or pagination).
