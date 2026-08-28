@@ -15,13 +15,17 @@ const PORT = Number(process.env.PORT ?? 8787);
 const DELAY_MS = Number(process.env.DELAY_MS ?? 500);
 const FAIL_RATE = Number(process.env.FAIL_RATE ?? 0);
 
+const MAX_DELAY_MS = 10_000;
+
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 app.use("/api/avatars", express.static(avatarsDir, { maxAge: "1h" }));
 
 app.get("/api/clients", async (req, res) => {
   const delay = Number(req.query.delay);
-  await wait(Number.isFinite(delay) && delay >= 0 ? delay : DELAY_MS);
+  const requested =
+    Number.isFinite(delay) && delay >= 0 ? delay : Number(DELAY_MS);
+  await wait(Math.min(requested, MAX_DELAY_MS));
 
   const fail = req.query.fail;
   const status = fail === "1" ? 500 : Number(fail);
