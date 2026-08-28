@@ -41,6 +41,6 @@ export function toChannelStack(focus: ClientNode): ChannelStackDatum[] {
     month,
     organic: organic[i],
     paid: paid[i],
-    existing: focus.values[i] - organic[i] - paid[i],
+    existing: Math.max(0, (focus.values[i] ?? 0) - organic[i] - paid[i]),
   }));
 }
