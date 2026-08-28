@@ -90,4 +90,3 @@ errors, keyboard and 375px.
 - Settle what the chart stacks: channels or children.
 - Decide if expanding a row should re-scope the chart.
 - Label the remainder band honestly where there is no channel data.
-- Tests for expand and collapse and the chart mapping.
