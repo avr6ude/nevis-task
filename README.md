@@ -31,8 +31,10 @@ them from its own URL:
 | http://localhost:5173/?fail=1 | server error (500) |
 | http://localhost:5173/?fail=404 | request error (404) |
 
-Stopping the API (`npm run dev:web` alone) gives the network error state.
-`FAIL_RATE=0.3 npm run dev` fails a share of requests at random.
+Running the client without the API (`npm run dev:web`) also gives a server
+error, since the Vite proxy answers 502. The offline variant needs the browser
+itself to be offline, via devtools. `FAIL_RATE=0.3 npm run dev` fails a share of
+requests at random.
 
 ## Changes to the brief
 
