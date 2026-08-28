@@ -26,7 +26,6 @@
   border-radius: var(--radius-sm);
   font-size: 12px;
   line-height: 1.4;
-  box-shadow: 0 6px 18px rgba(20, 20, 19, 0.18);
   min-width: 120px;
 }
 
