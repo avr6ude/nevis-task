@@ -31,18 +31,18 @@ function hashIndex(name: string, mod: number): number {
 }
 
 export function Avatar({ name, src }: AvatarProps) {
-  const [failed, setFailed] = useState(false);
+  const [failedSrc, setFailedSrc] = useState<string>();
   const bg = PALETTE[hashIndex(name, PALETTE.length)];
 
   return (
     <span className="avatar" style={{ background: bg }} aria-hidden="true">
       <span className="avatar__initials">{initials(name)}</span>
-      {src && !failed && (
+      {src && failedSrc !== src && (
         <img
           className="avatar__photo"
           src={src}
           alt=""
-          onError={() => setFailed(true)}
+          onError={() => setFailedSrc(src)}
         />
       )}
     </span>
