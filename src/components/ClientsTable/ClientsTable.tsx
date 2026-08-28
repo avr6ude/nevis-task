@@ -239,7 +239,6 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                 ref={(element) => setRowRef(node.id, element)}
                 role="row"
                 tabIndex={isFocused ? 0 : -1}
-                aria-label={node.name}
                 aria-level={level}
                 aria-expanded={hasChildren ? expanded : undefined}
                 onFocus={() => setFocusedId(node.id)}
