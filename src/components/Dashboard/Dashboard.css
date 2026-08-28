@@ -1,0 +1,13 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard__panel {
+  padding: 24px;
+}
+
+.dashboard__panel--table {
+  padding: 8px 0;
+}
