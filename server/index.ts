@@ -20,10 +20,18 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 app.use("/api/avatars", express.static(avatarsDir, { maxAge: "1h" }));
 
 app.get("/api/clients", async (req, res) => {
-  await wait(DELAY_MS);
+  const delay = Number(req.query.delay);
+  await wait(Number.isFinite(delay) && delay >= 0 ? delay : DELAY_MS);
 
-  const forced = req.query.fail === "1";
-  if (forced || Math.random() < FAIL_RATE) {
+  const fail = req.query.fail;
+  const status = fail === "1" ? 500 : Number(fail);
+
+  if (Number.isInteger(status) && status >= 400 && status <= 599) {
+    res.status(status).json({ error: "Failed to load client data." });
+    return;
+  }
+
+  if (Math.random() < FAIL_RATE) {
     res.status(500).json({ error: "Failed to load client data." });
     return;
   }
