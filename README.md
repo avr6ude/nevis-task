@@ -5,6 +5,9 @@ expandable table of the same numbers by company, branch, adviser, channel.
 
 ## Run
 
+Needs Node `^20.19 || ^22.13 || >=24` (Vite, Vitest and jsdom each pull the
+floor up in different places).
+
 ```bash
 npm install
 npm run dev
@@ -34,8 +37,9 @@ the error. Running without the API (`npm run dev:web`) also errors.
   design, so the table drills on its own.
 - **Rows are nodes and columns are months.** Expanding a row reveals its
   children, not a breakdown of a single month.
-- **Adviser photos live in the payload.** The design shows pictures per adviser but
-  the data has none, so I've added an `image` path to `company.json`.
+- **Adviser photos live in the payload.** The design shows pictures per adviser
+  but the data has none, so I've added an `image` path to `company.json`. The
+  images are exported from the design file.
 - **The name column has a visible "Name" header.** In the design that cell reads
   "Placeholder" in white on white.
 - **Expand controls appear only where they do something.** The design puts a
