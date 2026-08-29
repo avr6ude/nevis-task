@@ -10,8 +10,13 @@
 
   --color-row-hover: rgba(20, 20, 19, 0.04);
 
-  --color-existing: #b1a3f2;
-  --color-organic: #f3b7a1;
+  --chart-1: #b1a3f2;
+  --chart-2: #f3b7a1;
+  --chart-3: #9c4a5f;
+  --chart-4: #8f7fe8;
+  --chart-5: #e0a3b8;
+  --chart-6: #6a63a8;
+
   --color-paid: #9c4a5f;
 
   --font-sans:

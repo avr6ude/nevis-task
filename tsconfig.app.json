@@ -12,7 +12,8 @@
       "@/*": ["./src/*"],
       "@api/*": ["./src/api/*"],
       "@domain/*": ["./src/domain/*"],
-      "@components/*": ["./src/components/*"]
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"]
     },
 
     /* Bundler mode */

@@ -1,3 +1,4 @@
+import { useExpandedRows } from "@hooks/useExpandedRows";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -7,12 +8,19 @@ import { ClientsTable } from "./ClientsTable";
 
 const company = companyData as ClientNode;
 
+function Harness() {
+  const { expandedIds, toggle } = useExpandedRows([company.id]);
+  return (
+    <ClientsTable root={company} expandedIds={expandedIds} onToggle={toggle} />
+  );
+}
+
 const row = (name: string | RegExp) => screen.getByRole("row", { name });
 const queryRow = (name: string | RegExp) => screen.queryByRole("row", { name });
 
 describe("ClientsTable expand and collapse", () => {
   beforeEach(() => {
-    render(<ClientsTable root={company} />);
+    render(<Harness />);
   });
 
   it("starts with the company open and the branches collapsed", () => {

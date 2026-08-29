@@ -18,3 +18,15 @@
   justify-content: center;
   height: 360px;
 }
+
+.dashboard__scope {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--color-ink-secondary);
+}
+
+.dashboard__scope-sep {
+  padding: 0 6px;
+  color: var(--color-ink);
+  opacity: 0.35;
+}

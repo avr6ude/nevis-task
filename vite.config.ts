@@ -14,6 +14,7 @@ export default defineConfig({
       "@api": resolve("./src/api"),
       "@domain": resolve("./src/domain"),
       "@components": resolve("./src/components"),
+      "@hooks": resolve("./src/hooks"),
       "@": resolve("./src"),
     },
   },

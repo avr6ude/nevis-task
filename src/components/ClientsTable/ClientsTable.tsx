@@ -16,7 +16,8 @@ import "./ClientsTable.css";
 
 export interface ClientsTableProps {
   root: ClientNode;
-  defaultExpandedIds?: string[];
+  expandedIds: Set<string>;
+  onToggle: (id: string) => void;
 }
 
 const ADVISER_LEVEL = 3;
@@ -108,10 +109,11 @@ function findParentIndex(rows: FlatRow[], index: number): number | null {
   return null;
 }
 
-export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(
-    () => new Set(defaultExpandedIds ?? [root.id]),
-  );
+export function ClientsTable({
+  root,
+  expandedIds,
+  onToggle,
+}: ClientsTableProps) {
   const [focusedId, setFocusedId] = useState(root.id);
   const rowRefs = useRef(new Map<string, HTMLTableRowElement>());
 
@@ -138,18 +140,6 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
     });
   }, []);
 
-  const toggle = useCallback((id: string) => {
-    setExpandedIds((current) => {
-      const next = new Set(current);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  }, []);
-
   const handleKeyDown = (
     event: KeyboardEvent<HTMLTableRowElement>,
     row: FlatRow,
@@ -173,7 +163,7 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
       case "ArrowRight": {
         event.preventDefault();
         if (row.hasChildren && !row.expanded) {
-          toggle(row.node.id);
+          onToggle(row.node.id);
         } else if (row.hasChildren && row.expanded) {
           const child = rows[index + 1];
           if (child?.level === row.level + 1) focusRow(child.node.id);
@@ -184,7 +174,7 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
       case "ArrowLeft": {
         event.preventDefault();
         if (row.hasChildren && row.expanded) {
-          toggle(row.node.id);
+          onToggle(row.node.id);
         } else {
           const parentIndex = findParentIndex(rows, index);
           if (parentIndex !== null) focusRow(rows[parentIndex].node.id);
@@ -196,7 +186,7 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
       case " ": {
         if (row.hasChildren) {
           event.preventDefault();
-          toggle(row.node.id);
+          onToggle(row.node.id);
         }
         break;
       }
@@ -255,7 +245,7 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                 onFocus={() => setFocusedId(node.id)}
                 onClick={() => {
                   if (!hasChildren) return;
-                  toggle(node.id);
+                  onToggle(node.id);
                   focusRow(node.id);
                 }}
                 onKeyDown={(event) => handleKeyDown(event, row, index)}
@@ -282,7 +272,7 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                         }
                         className="clients-table__expand-btn"
                         onPress={() => {
-                          toggle(node.id);
+                          onToggle(node.id);
                           focusRow(node.id);
                         }}
                       >

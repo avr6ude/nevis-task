@@ -1,7 +1,8 @@
 # Clients dashboard
 
-Stacked bar chart of client counts by acquisition channel over 12 months, and an
-expandable table of the same numbers by company, branch, adviser, channel.
+Stacked bar chart of client counts over 12 months, and an expandable table of the
+same numbers by company, branch, adviser, channel. The chart follows the table:
+it stacks whichever level sits directly beneath the row you have drilled into.
 
 ## Run
 
@@ -18,7 +19,7 @@ Client on http://localhost:5173, API on http://localhost:8787, Vite proxies
 `npm test` runs Vitest.
 
 Tests cover the two things the brief names: how the data maps into the chart
-(`src/domain/channelStack.test.ts`) and expand and collapse by pointer and
+(`src/domain/childStack.test.ts`) and expand and collapse by pointer and
 keyboard (`src/components/ClientsTable/ClientsTable.test.tsx`).
 
 `GET /api/clients` returns the dataset, photos come from
@@ -28,13 +29,16 @@ the error. Running without the API (`npm run dev:web`) also errors.
 
 ## Assumptions
 
-- **The chart stacks the three channels**, not each node's children, because the
-  legend in the design is a list of channels.
-- **Above adviser level the split is derived.** `organic` and `paid` are summed
-  from below and `existing` is the remainder, so a node with no channel data
-  reads as one full band.
-- **The chart always shows the company.** Rows have no selected state in the
-  design, so the table drills on its own.
+- **The chart stacks the level directly beneath the focused node.** Company
+  splits into its branches, a branch into its advisers, an adviser into their
+  channels. Every segment is a real node, so nothing is invented at levels the
+  data does not describe.
+- **The chart follows the table's expansion, not a selection.** Rows have no
+  selected state in the design, so scope is derived: walk down while exactly one
+  child is open, and stop. Opening two branches at once falls back to their
+  common parent.
+- **A bar is the sum of its children, which is not always the parent's own
+  figure.** Where the two differ the tooltip shows both.
 - **Rows are nodes and columns are months.** Expanding a row reveals its
   children, not a breakdown of a single month.
 - **Adviser photos live in the payload.** The design shows pictures per adviser
@@ -53,24 +57,26 @@ the error. Running without the API (`npm run dev:web`) also errors.
 
 **The numbers do not add up.** Children do not always sum to their parent:
 Company May 2024 is 301 against 279, Branch 1 Aug 2024 is 214 against 216, and
-Anna Blackwood is off by one or two in five of the twelve months. Each bar uses
-the node's own total and splits channels inside it, so bars match the row above
-them in the table. In practice a parent should either carry a total that agrees
-with its children, or carry none at all and let the client sum them, which is
-cheap and cannot drift.
+Anna Blackwood is off by one or two in five of the twelve months. Each bar is the
+sum of its children, so the chart surfaces the gap rather than papering over it,
+and the tooltip prints both figures where they differ. In practice a parent
+should either carry a total that agrees with its children, or carry none at all
+and let the client sum them, which is cheap and cannot drift.
 
 **The design shows a channel legend on the company chart,** but channels only
-exist under one adviser, so that split cannot come from the data.
+exist under one adviser, so that split cannot come from the data at that level.
+A channel breakdown is what you get when the chart is scoped to an adviser:
+drilling to Anna Blackwood reproduces the mockup's legend and colours exactly.
+The legend looks right; it is attached to the wrong node.
 
 **The design covers one state and one width,** so loading, errors, focus and the
 narrow layout have no reference to match.
 
 ## Next
 
-- Rescope the chart to the expanded row, once we agree whether it should stack
-  channels or each node's children.
-- Label the remainder band where a node has no channel data, so the chart stops
-  implying those clients are all existing ones.
+- Let a row be scoped directly, so opening two branches does not fall back to the
+  company.
+- Reconcile the parent totals with whoever owns the data.
 - Keep the expanded rows in the URL so a drilled-in view can be shared.
 - Virtualise the table if data becomes heavy in future, and load subtrees on demand
   (with cursor or pagination).

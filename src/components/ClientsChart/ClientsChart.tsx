@@ -1,9 +1,4 @@
-import {
-  CHANNEL_KEYS,
-  CHANNEL_LABELS,
-  type ChannelKey,
-  type ChannelStackDatum,
-} from "@domain/channelStack";
+import type { ChildStack, StackDatum } from "@domain/childStack";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { GridRows } from "@visx/grid";
 import { Group } from "@visx/group";
@@ -12,10 +7,10 @@ import { BarStack } from "@visx/shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Legend } from "./Legend";
-import "./ChannelBarChart.css";
+import "./ClientsChart.css";
 
-export interface ChannelBarChartProps {
-  data: ChannelStackDatum[];
+export interface ClientsChartProps {
+  stack: ChildStack;
   scopeLabel: string;
   height?: number;
 }
@@ -25,10 +20,14 @@ const MARGIN = { top: 8, right: 8, bottom: 28, left: 36 } as const;
 const FULL_LABEL_WIDTH = 68;
 const SHORT_LABEL_WIDTH = 34;
 
-const colorScale = scaleOrdinal<ChannelKey, string>({
-  domain: [...CHANNEL_KEYS],
-  range: ["var(--color-existing)", "var(--color-organic)", "var(--color-paid)"],
-});
+const PALETTE = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--chart-6)",
+];
 
 function niceCeiling(max: number): number {
   if (max <= 0) return 10;
@@ -41,20 +40,27 @@ interface TooltipDatum {
 }
 
 function InnerChart({
-  data,
+  stack,
   width,
   height,
 }: {
-  data: ChannelStackDatum[];
+  stack: ChildStack;
   width: number;
   height: number;
 }) {
+  const { series, data } = stack;
   const innerWidth = Math.max(0, width - MARGIN.left - MARGIN.right);
   const innerHeight = Math.max(0, height - MARGIN.top - MARGIN.bottom);
 
-  const totals = useMemo(
-    () => data.map((d) => d.existing + d.organic + d.paid),
-    [data],
+  const keys = useMemo(() => series.map((s) => s.key), [series]);
+
+  const colorScale = useMemo(
+    () =>
+      scaleOrdinal<string, string>({
+        domain: keys,
+        range: PALETTE,
+      }),
+    [keys],
   );
 
   const xScale = useMemo(
@@ -70,11 +76,11 @@ function InnerChart({
   const yScale = useMemo(
     () =>
       scaleLinear<number>({
-        domain: [0, niceCeiling(Math.max(1, ...totals))],
+        domain: [0, niceCeiling(Math.max(1, ...data.map((d) => d.total)))],
         range: [innerHeight, 0],
         nice: true,
       }),
-    [totals, innerHeight],
+    [data, innerHeight],
   );
 
   const {
@@ -155,9 +161,9 @@ function InnerChart({
             stroke="var(--color-line-strong)"
             strokeDasharray="1 4"
           />
-          <BarStack<ChannelStackDatum, ChannelKey>
+          <BarStack<StackDatum, string>
             data={data}
-            keys={[...CHANNEL_KEYS]}
+            keys={keys}
             x={(d) => d.month}
             xScale={xScale}
             yScale={yScale}
@@ -175,8 +181,6 @@ function InnerChart({
                 if (segments.length === 0) return null;
 
                 const first = segments[0].bar;
-                const barX = first.x;
-                const barW = first.width;
                 const topY = Math.min(...segments.map((s) => s.bar.y));
                 const bottomY = Math.max(
                   ...segments.map((s) => s.bar.y + s.bar.height),
@@ -187,9 +191,9 @@ function InnerChart({
                   <g key={datum.month}>
                     <clipPath id={clipId}>
                       <rect
-                        x={barX}
+                        x={first.x}
                         y={topY}
-                        width={barW}
+                        width={first.width}
                         height={bottomY - topY}
                         rx={6}
                         ry={6}
@@ -251,24 +255,29 @@ function InnerChart({
         >
           {(() => {
             const datum = data[tooltipData.monthIndex];
-            const total = totals[tooltipData.monthIndex];
+            const drifted = datum.total !== datum.reported;
             return (
               <>
                 <div className="chart__tooltip-title">{datum.month}</div>
-                {CHANNEL_KEYS.map((key) => (
-                  <div key={key} className="chart__tooltip-row">
+                {series.map((s) => (
+                  <div key={s.key} className="chart__tooltip-row">
                     <span>
                       <span
                         className="chart__tooltip-swatch"
-                        style={{ background: colorScale(key) }}
+                        style={{ background: colorScale(s.key) }}
                       />
-                      {CHANNEL_LABELS[key]}
+                      {s.label}
                     </span>
-                    <strong>{datum[key].toLocaleString()}</strong>
+                    <strong>{(datum[s.key] as number).toLocaleString()}</strong>
                   </div>
                 ))}
                 <div className="chart__tooltip-meta">
-                  Total {total.toLocaleString()}
+                  Total {datum.total.toLocaleString()}
+                  {drifted && (
+                    <span className="chart__tooltip-drift">
+                      reported {datum.reported.toLocaleString()}
+                    </span>
+                  )}
                 </div>
               </>
             );
@@ -298,24 +307,25 @@ function useElementWidth() {
   return [ref, width] as const;
 }
 
-export function ChannelBarChart({
-  data,
+export function ClientsChart({
+  stack,
   scopeLabel,
   height = 360,
-}: ChannelBarChartProps) {
+}: ClientsChartProps) {
   const [plotRef, width] = useElementWidth();
 
   return (
     <figure className="chart">
       <figcaption className="visually-hidden">
         Stacked bar chart of monthly client counts for {scopeLabel}, split by
-        acquisition channel. The monthly totals it draws are listed in the table
-        below; the channel split is only shown here and in the chart tooltip.
+        the level directly beneath it. The same figures are in the table below.
       </figcaption>
       <div className="chart__plot" style={{ height }} ref={plotRef}>
-        {width > 0 && <InnerChart data={data} width={width} height={height} />}
+        {width > 0 && (
+          <InnerChart stack={stack} width={width} height={height} />
+        )}
       </div>
-      <Legend />
+      <Legend series={stack.series} palette={PALETTE} />
     </figure>
   );
 }
