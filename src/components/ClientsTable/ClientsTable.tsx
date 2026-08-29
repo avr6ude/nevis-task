@@ -253,15 +253,8 @@ export function ClientsTable({ root, defaultExpandedIds }: ClientsTableProps) {
                 aria-level={level}
                 aria-expanded={hasChildren ? expanded : undefined}
                 onFocus={() => setFocusedId(node.id)}
-                onClick={(event) => {
+                onClick={() => {
                   if (!hasChildren) return;
-                  if (
-                    (event.target as HTMLElement).closest(
-                      ".clients-table__expand-btn",
-                    )
-                  ) {
-                    return;
-                  }
                   toggle(node.id);
                   focusRow(node.id);
                 }}
