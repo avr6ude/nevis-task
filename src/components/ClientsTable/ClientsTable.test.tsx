@@ -85,6 +85,23 @@ describe("ClientsTable expand and collapse", () => {
     await waitFor(() => expect(row(/Company/)).toHaveFocus());
   });
 
+  it("keeps exactly one row in the tab order", async () => {
+    const user = userEvent.setup();
+    const tabbable = () =>
+      screen.getAllByRole("row").filter((r) => r.tabIndex === 0);
+
+    expect(tabbable()).toHaveLength(1);
+    expect(tabbable()[0]).toBe(row(/Company/));
+
+    row(/Company/).focus();
+    await user.keyboard("{ArrowDown}");
+
+    await waitFor(() => {
+      expect(tabbable()).toHaveLength(1);
+      expect(tabbable()[0]).toBe(row(/Branch 1/));
+    });
+  });
+
   it("gives no expand control to a node without children", async () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Expand Branch 1" }));
