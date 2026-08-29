@@ -11,7 +11,12 @@ npm run dev
 ```
 
 Client on http://localhost:5173, API on http://localhost:8787, Vite proxies
-`/api`. `npm run build` type-checks and builds, `npm run lint` runs Biome.
+`/api`. `npm run build` type-checks and builds, `npm run lint` runs Biome,
+`npm test` runs Vitest.
+
+Tests cover the two things the brief names: how the data maps into the chart
+(`src/domain/channelStack.test.ts`) and expand and collapse by pointer and
+keyboard (`src/components/ClientsTable/ClientsTable.test.tsx`).
 
 `GET /api/clients` returns the dataset, photos come from
 `GET /api/avatars/:file`. The client forwards two query params from its own URL
@@ -35,8 +40,6 @@ the error. Running without the API (`npm run dev:web`) also errors.
   "Placeholder" in white on white.
 - **Expand controls appear only where they do something.** The design puts a
   chevron on every adviser, but four of the five have no channels.
-- **Secondary text is 0.65 alpha, not the 0.6 in the design.** At 0.6 it lands
-  at 4.3:1 on the cream background and fails WCAG AA.
 - **The table wrapper is focusable.** It scrolls sideways, and focusing a row
   does not scroll it, so without this a keyboard user cannot reach the later
   months. Biome's `noNoninteractiveTabindex` is turned off for that folder in
