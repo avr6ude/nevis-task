@@ -53,6 +53,7 @@ function InnerChart({
   const innerHeight = Math.max(0, height - MARGIN.top - MARGIN.bottom);
 
   const keys = useMemo(() => series.map((s) => s.key), [series]);
+  const scopeKey = keys.join("|");
 
   const colorScale = useMemo(
     () =>
@@ -188,7 +189,11 @@ function InnerChart({
                 const clipId = `bar-clip-${monthIndex}`;
 
                 return (
-                  <g key={datum.month}>
+                  <g
+                    key={`${scopeKey}-${datum.month}`}
+                    className="chart__bar"
+                    style={{ animationDelay: `${monthIndex * 22}ms` }}
+                  >
                     <clipPath id={clipId}>
                       <rect
                         x={first.x}
