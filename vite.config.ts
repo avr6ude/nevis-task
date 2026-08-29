@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 const API_PORT = process.env.PORT ?? "8787";
 
@@ -21,5 +21,10 @@ export default defineConfig({
     proxy: {
       "/api": `http://localhost:${API_PORT}`,
     },
+  },
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./src/test/setup.ts"],
+    css: false,
   },
 });
