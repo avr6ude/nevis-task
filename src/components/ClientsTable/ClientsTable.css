@@ -34,9 +34,17 @@
 
 .clients-table th.clients-table__name-col,
 .clients-table td.clients-table__name-col {
+  position: sticky;
+  left: 0;
+  z-index: 1;
   width: var(--name-col);
   min-width: var(--name-col);
   padding-left: 16px;
+  background: var(--color-surface);
+}
+
+.clients-table__row--interactive:hover .clients-table__name-col {
+  background: color-mix(in srgb, var(--color-ink) 4%, var(--color-surface));
 }
 
 .clients-table thead th.clients-table__name-col {
