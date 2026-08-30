@@ -6,6 +6,7 @@ import {
 } from "@components/ClientsTable/ClientsTable";
 import { DataError } from "@components/states/DataError";
 import { EmptyChart } from "@components/states/EmptyChart";
+import { ErrorBoundary } from "@components/states/ErrorBoundary";
 import { ChartSkeleton, TableSkeleton } from "@components/states/Skeletons";
 import { toChildStack } from "@domain/childStack";
 import { deepestExpanded, pathTo } from "@domain/clients";
@@ -96,18 +97,22 @@ function DashboardContent({ root }: { root: ClientNode }) {
             </p>
           )}
 
-          <ClientsChart stack={stack} scopeLabel={focus.name} />
+          <ErrorBoundary label="chart">
+            <ClientsChart stack={stack} scopeLabel={focus.name} />
+          </ErrorBoundary>
         </section>
 
         <section
           className={`card ${styles.panel} ${styles.panelTable}`}
           aria-label={`Client breakdown for ${scope}`}
         >
-          <ClientsTable
-            root={root}
-            expandedIds={expandedIds}
-            onToggle={toggle}
-          />
+          <ErrorBoundary label="table">
+            <ClientsTable
+              root={root}
+              expandedIds={expandedIds}
+              onToggle={toggle}
+            />
+          </ErrorBoundary>
         </section>
       </div>
     </main>

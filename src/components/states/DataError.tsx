@@ -1,6 +1,5 @@
 import { ApiError, type ApiErrorKind } from "@api/client";
-import { Button } from "react-aria-components";
-import styles from "./DataError.module.css";
+import { MessageCard } from "./MessageCard";
 
 interface ErrorCopy {
   title: string;
@@ -16,6 +15,10 @@ const MESSAGES: Record<ApiErrorKind, ErrorCopy> = {
     title: "Couldn't load clients",
     detail: "Something went wrong on our end. Try again in a moment.",
   },
+  invalid: {
+    title: "Client data looks wrong",
+    detail: "The server sent something we can't read. Try again in a moment.",
+  },
 };
 
 export interface DataErrorProps {
@@ -28,12 +31,10 @@ export function DataError({ error, onRetry }: DataErrorProps) {
     error instanceof ApiError ? MESSAGES[error.kind] : MESSAGES.failed;
 
   return (
-    <div className={styles.error} role="alert">
-      <p className={styles.title}>{copy.title}</p>
-      <p className={styles.detail}>{copy.detail}</p>
-      <Button className={styles.retry} onPress={onRetry}>
-        Try again
-      </Button>
-    </div>
+    <MessageCard
+      title={copy.title}
+      detail={copy.detail}
+      action={{ label: "Try again", onPress: onRetry }}
+    />
   );
 }
