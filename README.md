@@ -27,16 +27,6 @@ refuses to boot on bad data, the client rejects a response that does not match,
 and every node's `values` has to line up with `months`. Query params check the
 states by hand: `/?delay=6000`, `/?fail=1`, `/?bad=1`.
 
-## Accessibility
-
-The table is a treegrid. Rows carry `aria-level` and `aria-expanded`, and every
-month is its own grid cell, so Left and Right walk across the year and a
-keyboard user reaches December without a mouse.
-
-The chart's SVG is hidden from assistive tech and the same figures sit beside it
-in a visually hidden table with row and column headers, so the numbers are not
-mouse-only.
-
 ## Assumptions
 
 - **The chart stacks the level directly beneath the focused node.** Company into
@@ -50,7 +40,8 @@ mouse-only.
 - **Rows are nodes and columns are months.** Expanding a row reveals its
   children, not a breakdown of one month.
 - **Adviser photos live in the payload.** The design shows them, the data has
-  none, so `company.json` carries an `image` path exported from the design file.
+  none, so `company.json` carries an `image` path exported from the design file. 
+  Ideally, they should be in a CDN of some sort, but for this task it's overkill.
 - **The name column has a visible "Name" header.** In the design that cell reads
   "Placeholder" in white on white.
 - **Expand controls appear only where they do something.** The design puts a
