@@ -213,8 +213,11 @@ export function ClientsTable({
 
   return (
     <div className={styles.container}>
-      <table role="treegrid" className={styles.table}>
-        <caption className={styles.caption}>Clients per month</caption>
+      <table
+        role="treegrid"
+        aria-label="Clients per month by company, branch, adviser and acquisition channel"
+        className={styles.table}
+      >
         <MonthHeader months={months} />
 
         <tbody>

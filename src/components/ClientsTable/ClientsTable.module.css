@@ -209,11 +209,3 @@
     opacity: 0.45;
   }
 }
-
-.caption {
-  caption-side: top;
-  text-align: left;
-  padding: 0 0 12px;
-  color: var(--color-ink-secondary);
-  font-size: 13px;
-}
