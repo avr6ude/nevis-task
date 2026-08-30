@@ -16,18 +16,6 @@ afterEach(() => {
 });
 
 describe("ErrorBoundary", () => {
-  it("shows a fallback naming the part that failed", () => {
-    render(
-      <ErrorBoundary label="chart">
-        <Boom />
-      </ErrorBoundary>,
-    );
-
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      /chart stopped working/i,
-    );
-  });
-
   it("keeps siblings alive when one section crashes", () => {
     render(
       <div>

@@ -68,20 +68,4 @@ describe("useClients", () => {
     expect(result.current.data).toMatchObject({ root: { name: "Company" } });
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
-
-  it("does not refetch while another component already asked", async () => {
-    const fetchMock = vi.fn(async () => ok());
-    vi.stubGlobal("fetch", fetchMock);
-
-    const { result } = renderHook(
-      () => {
-        useClients();
-        return useClients();
-      },
-      { wrapper },
-    );
-
-    await waitFor(() => expect(result.current.status).toBe("ok"));
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-  });
 });

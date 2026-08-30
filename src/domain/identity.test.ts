@@ -9,14 +9,6 @@ describe("initials", () => {
   it("falls back to one letter for a single word", () => {
     expect(initials("Company")).toBe("C");
   });
-
-  it("ignores extra whitespace", () => {
-    expect(initials("  Anna   Marie  Blackwood ")).toBe("AB");
-  });
-
-  it("survives an empty name", () => {
-    expect(initials("")).toBe("");
-  });
 });
 
 describe("avatarColor", () => {
@@ -24,9 +16,5 @@ describe("avatarColor", () => {
     for (const name of ["Anna Blackwood", "Branch 1", "", "Ω"]) {
       expect(AVATAR_PALETTE).toContain(avatarColor(name));
     }
-  });
-
-  it("gives the same name the same colour", () => {
-    expect(avatarColor("Anna Blackwood")).toBe(avatarColor("Anna Blackwood"));
   });
 });

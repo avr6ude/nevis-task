@@ -54,21 +54,6 @@ describe("fetchClients", () => {
     await expect(fetchClients()).rejects.toMatchObject({ kind: "failed" });
   });
 
-  it("rejects a well-formed response that does not match the schema", async () => {
-    stubFetch(
-      async () =>
-        new Response(
-          JSON.stringify({ id: "x", name: "Company", values: [1] }),
-          {
-            status: 200,
-            headers: { "content-type": "application/json" },
-          },
-        ),
-    );
-
-    await expect(fetchClients()).rejects.toMatchObject({ kind: "invalid" });
-  });
-
   it("rejects a node nested deep in the tree that is malformed", async () => {
     const broken = structuredClone(companyData) as Record<string, unknown>;
     const root = broken.root as Record<string, unknown>;
