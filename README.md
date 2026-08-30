@@ -66,6 +66,9 @@ narrow layout have no reference to match.
 
 ## Next
 
+- Tighten the table on narrow screens. Nothing overflows at 375px, but the row
+  height, name column and type keep their desktop sizing, so barely one month is
+  visible at a time and reading the year means a lot of sideways scrolling.
 - Virtualise the table with react-window and load subtrees on demand.
 - Keep the expanded rows in the URL so a drilled-in view can be shared.
 - Run type-check, lint and tests in CI so a regression cannot land unnoticed.
