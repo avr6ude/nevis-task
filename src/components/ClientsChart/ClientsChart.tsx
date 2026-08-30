@@ -36,10 +36,12 @@ interface TooltipDatum {
 
 function InnerChart({
   stack,
+  scopeLabel,
   width,
   height,
 }: {
   stack: ChildStack;
+  scopeLabel: string;
   width: number;
   height: number;
 }) {
@@ -276,7 +278,7 @@ function InnerChart({
                   Total {datum.total.toLocaleString()}
                   {drifted && (
                     <span className={styles.tooltipDrift}>
-                      reported {datum.reported.toLocaleString()}
+                      {scopeLabel} reports {datum.reported.toLocaleString()}
                     </span>
                   )}
                 </div>
@@ -314,13 +316,18 @@ export function ClientsChart({ stack, scopeLabel }: ClientsChartProps) {
 
   return (
     <figure className={styles.chart} aria-labelledby={captionId}>
-      <figcaption className="visually-hidden">
+      <figcaption id={captionId} className="visually-hidden">
         Stacked bar chart of monthly client counts for {scopeLabel}, split by
         the level directly beneath it. The same figures are in the table below.
       </figcaption>
       <div className={styles.plot} style={{ height: HEIGHT }} ref={plotRef}>
         {width > 0 && (
-          <InnerChart stack={stack} width={width} height={HEIGHT} />
+          <InnerChart
+            stack={stack}
+            scopeLabel={scopeLabel}
+            width={width}
+            height={HEIGHT}
+          />
         )}
       </div>
       <Legend series={stack.series} palette={PALETTE} />
@@ -330,6 +337,8 @@ export function ClientsChart({ stack, scopeLabel }: ClientsChartProps) {
 }
 
 function ChartDataTable({ stack, scopeLabel }: ClientsChartProps) {
+  const anyDrift = stack.data.some((d) => d.total !== d.reported);
+
   return (
     <table className="visually-hidden">
       <caption>Chart data for {scopeLabel}</caption>
@@ -342,6 +351,7 @@ function ChartDataTable({ stack, scopeLabel }: ClientsChartProps) {
             </th>
           ))}
           <th scope="col">Total</th>
+          {anyDrift && <th scope="col">{scopeLabel} reports</th>}
         </tr>
       </thead>
       <tbody>
@@ -352,6 +362,7 @@ function ChartDataTable({ stack, scopeLabel }: ClientsChartProps) {
               <td key={s.key}>{(datum[s.key] as number).toLocaleString()}</td>
             ))}
             <td>{datum.total.toLocaleString()}</td>
+            {anyDrift && <td>{datum.reported.toLocaleString()}</td>}
           </tr>
         ))}
       </tbody>
