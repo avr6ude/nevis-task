@@ -12,7 +12,7 @@ import {
 import { DataError } from "@components/states/DataError";
 import { ErrorBoundary } from "@components/states/ErrorBoundary";
 import { toChildStack } from "@domain/childStack";
-import { deepestExpanded, pathTo } from "@domain/clients";
+import { deepestExpanded, pathTo, rollUp } from "@domain/clients";
 import { useExpandedRows } from "@hooks/useExpandedRows";
 import { useMemo } from "react";
 import type { ClientsData } from "@/types";
@@ -60,7 +60,8 @@ export function Dashboard() {
 }
 
 function DashboardContent({ data }: { data: ClientsData }) {
-  const { months, root } = data;
+  const { months } = data;
+  const root = useMemo(() => rollUp(data.root), [data.root]);
   const { expandedIds, toggle } = useExpandedRows([root.id]);
 
   const focus = useMemo(

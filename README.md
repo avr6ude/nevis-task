@@ -41,8 +41,10 @@ the error, `/?bad=1` for a malformed payload. Running without the API
   selected state in the design, so scope is derived: walk down while exactly one
   child is open, and stop. Opening two branches at once falls back to their
   common parent.
-- **A bar is the sum of its children, which is not always the parent's own
-  figure.** Where the two differ the tooltip shows both.
+- **Every parent figure is recomputed from its children.** The numbers in the
+  payload do not add up (see below), so the client rolls them up from the leaves
+  instead of trusting each node's own total. Chart and table therefore always
+  agree.
 - **Rows are nodes and columns are months.** Expanding a row reveals its
   children, not a breakdown of a single month.
 - **Adviser photos live in the payload.** The design shows pictures per adviser
@@ -62,13 +64,16 @@ the error, `/?bad=1` for a malformed payload. Running without the API
 
 ## What I think you got wrong
 
-**The numbers do not add up.** Children do not always sum to their parent:
-Company May 2024 is 301 against 279, Branch 1 Aug 2024 is 214 against 216, and
-Anna Blackwood is off by one or two in five of the twelve months. Each bar is the
-sum of its children, so the chart surfaces the gap rather than papering over it,
-and the tooltip prints both figures where they differ. In practice a parent
-should either carry a total that agrees with its children, or carry none at all
-and let the client sum them, which is cheap and cannot drift.
+**The numbers do not add up.** Children do not sum to their parent anywhere in
+the tree: Company May 2024 says 301 where its branches sum to 279, Branch 1
+Aug 2024 says 214 where its advisers sum to 216, and Anna Blackwood is off by
+one or two in five of the twelve months. Since the errors compound up the tree,
+the displayed figures are rolled up from the leaves and the totals in the
+payload are ignored. Company May then reads 278, not 301 or 279. The leaf
+numbers are the only ones taken as given, so if those are wrong too the whole
+thing is. In practice a parent should either carry a total that agrees with its
+children, or carry none at all and let the client sum them, which is cheap and
+cannot drift.
 
 **The design shows a channel legend on the company chart,** but channels only
 exist under one adviser, so that split cannot come from the data at that level.

@@ -9,7 +9,6 @@ export interface StackSeries {
 export interface StackDatum {
   month: string;
   total: number;
-  reported: number;
   [seriesKey: string]: number | string;
 }
 
@@ -26,7 +25,7 @@ export function toChildStack(focus: ClientNode, months: string[]): ChildStack {
       series: [{ key: focus.id, label: focus.name }],
       data: months.map((month, i) => {
         const value = focus.values[i] ?? 0;
-        return { month, total: value, reported: value, [focus.id]: value };
+        return { month, total: value, [focus.id]: value };
       }),
     };
   }
@@ -34,11 +33,7 @@ export function toChildStack(focus: ClientNode, months: string[]): ChildStack {
   return {
     series: children.map((child) => ({ key: child.id, label: child.name })),
     data: months.map((month, i) => {
-      const datum: StackDatum = {
-        month,
-        total: 0,
-        reported: focus.values[i] ?? 0,
-      };
+      const datum: StackDatum = { month, total: 0 };
       let total = 0;
       for (const child of children) {
         const value = child.values[i] ?? 0;

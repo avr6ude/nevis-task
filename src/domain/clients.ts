@@ -45,3 +45,20 @@ export function pathTo(root: ClientNode, id: string): ClientNode[] {
 
   return walk(root) ? trail : [];
 }
+
+export function rollUp(node: ClientNode): ClientNode {
+  const children = getChildren(node);
+  if (!children?.length) return node;
+
+  const rolled = children.map(rollUp);
+  const values = node.values.map((_, i) =>
+    rolled.reduce((sum, child) => sum + (child.values[i] ?? 0), 0),
+  );
+  const key = node.branches
+    ? "branches"
+    : node.employees
+      ? "employees"
+      : "channels";
+
+  return { ...node, values, [key]: rolled };
+}

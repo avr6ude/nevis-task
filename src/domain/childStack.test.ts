@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
 import type { ClientNode, ClientsData } from "@/types";
 import { toChildStack } from "./childStack";
-import { deepestExpanded, findNode } from "./clients";
+import { deepestExpanded, findNode, getChildren, rollUp } from "./clients";
 
 const { months: MONTHS, root: company } = companyData as ClientsData;
 
@@ -15,12 +15,6 @@ function node(id: string): ClientNode {
 const BRANCH_1 = "d6b668e1-89a4-4467-bdf6-c9ebaf2cea5f";
 const BRANCH_2 = "71da0b06-5785-4a60-9273-4df2be619ee4";
 const ANNA = "e3c4637b-2f21-4b7e-883e-b13ae1a6df6a";
-
-function forMonth(stack: ReturnType<typeof toChildStack>, month: string) {
-  const found = stack.data.find((d) => d.month === month);
-  if (!found) throw new Error(`no row for ${month}`);
-  return found;
-}
 
 describe("toChildStack", () => {
   it("stacks the level directly beneath the focused node", () => {
@@ -74,20 +68,44 @@ describe("toChildStack", () => {
       expect(datum.total).toBe(summed);
     }
   });
+});
 
-  it("keeps the node's own figure alongside the summed children", () => {
-    const may = forMonth(toChildStack(company, MONTHS), "May 2024");
-    expect(may.total).toBe(279);
-    expect(may.reported).toBe(301);
+describe("rollUp", () => {
+  const rolled = rollUp(company);
+  const at = (n: ClientNode, month: string) => n.values[MONTHS.indexOf(month)];
 
-    const aug = forMonth(toChildStack(node(BRANCH_1), MONTHS), "Aug 2024");
-    expect(aug.total).toBe(216);
-    expect(aug.reported).toBe(214);
+  it("replaces a parent's figure with the sum of its children", () => {
+    expect(at(company, "May 2024")).toBe(301);
+    expect(at(rolled, "May 2024")).toBe(278);
   });
 
-  it("agrees with the node's own figure where the data reconciles", () => {
-    const feb = forMonth(toChildStack(company, MONTHS), "Feb 2024");
-    expect(feb.total).toBe(feb.reported);
+  it("rolls up from the deepest level first", () => {
+    const branch1 = findNode(rolled, BRANCH_1);
+    expect(at(node(BRANCH_1), "Aug 2024")).toBe(214);
+    expect(at(branch1!, "Aug 2024")).toBe(214);
+  });
+
+  it("leaves nodes without children untouched", () => {
+    const anna = findNode(company, ANNA);
+    const rolledAnna = findNode(rolled, ANNA);
+    const channels = getChildren(rolledAnna!) ?? [];
+    expect(channels.map((c) => c.values)).toEqual(
+      (getChildren(anna!) ?? []).map((c) => c.values),
+    );
+  });
+
+  it("makes every parent equal the sum of its children", () => {
+    const check = (n: ClientNode) => {
+      const kids = getChildren(n);
+      if (!kids?.length) return;
+      for (const [i] of MONTHS.entries()) {
+        expect(n.values[i]).toBe(
+          kids.reduce((sum, k) => sum + (k.values[i] ?? 0), 0),
+        );
+      }
+      for (const k of kids) check(k);
+    };
+    check(rolled);
   });
 });
 

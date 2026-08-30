@@ -9,7 +9,6 @@ declare const styles:
   & Readonly<{ "tooltipRow": string }>
   & Readonly<{ "tooltipSwatch": string }>
   & Readonly<{ "tooltipMeta": string }>
-  & Readonly<{ "tooltipDrift": string }>
   & Readonly<{ "bar": string }>
   & Readonly<{ "empty": string }>
   & Readonly<{ "skeletonBars": string }>
