@@ -4,12 +4,9 @@ import {
   ClientsTable,
   ClientsTableShell,
 } from "@components/ClientsTable/ClientsTable";
-import {
-  ChartSkeleton,
-  ChartUnavailable,
-  DataError,
-  TableSkeleton,
-} from "@components/states/States";
+import { DataError } from "@components/states/DataError";
+import { EmptyChart } from "@components/states/EmptyChart";
+import { ChartSkeleton, TableSkeleton } from "@components/states/Skeletons";
 import { toChildStack } from "@domain/childStack";
 import { deepestExpanded, pathTo } from "@domain/clients";
 import { useExpandedRows } from "@hooks/useExpandedRows";
@@ -37,7 +34,7 @@ export function Dashboard() {
             {clients.status === "loading" ? (
               <ChartSkeleton />
             ) : (
-              <ChartUnavailable message="No chart to show while the data is unavailable." />
+              <EmptyChart message="No chart to show while the data is unavailable." />
             )}
           </div>
         </section>

@@ -1,0 +1,39 @@
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 56px 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.detail {
+  margin: 6px 0 0;
+  max-width: 44ch;
+  color: var(--color-ink-secondary);
+}
+
+.retry {
+  margin-top: 20px;
+  border: none;
+  background: var(--color-ink);
+  color: var(--color-surface);
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.12s ease;
+}
+
+.retry[data-hovered] {
+  opacity: 0.85;
+}
+
+.retry[data-pressed] {
+  opacity: 0.7;
+}
