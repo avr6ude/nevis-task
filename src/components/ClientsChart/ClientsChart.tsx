@@ -325,31 +325,33 @@ export function ClientsChart({ stack, scopeLabel }: ClientsChartProps) {
 
 function ChartDataTable({ stack, scopeLabel }: ClientsChartProps) {
   return (
-    <table className="visually-hidden">
-      <caption>Chart data for {scopeLabel}</caption>
-      <thead>
-        <tr>
-          <th scope="col">Month</th>
-          {stack.series.map((s) => (
-            <th scope="col" key={s.key}>
-              {s.label}
-            </th>
-          ))}
-          <th scope="col">Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {stack.data.map((datum) => (
-          <tr key={datum.month}>
-            <th scope="row">{datum.month}</th>
+    <div className="visually-hidden">
+      <table>
+        <caption>Chart data for {scopeLabel}</caption>
+        <thead>
+          <tr>
+            <th scope="col">Month</th>
             {stack.series.map((s) => (
-              <td key={s.key}>{(datum[s.key] as number).toLocaleString()}</td>
+              <th scope="col" key={s.key}>
+                {s.label}
+              </th>
             ))}
-            <td>{datum.total.toLocaleString()}</td>
+            <th scope="col">Total</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {stack.data.map((datum) => (
+            <tr key={datum.month}>
+              <th scope="row">{datum.month}</th>
+              {stack.series.map((s) => (
+                <td key={s.key}>{(datum[s.key] as number).toLocaleString()}</td>
+              ))}
+              <td>{datum.total.toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
