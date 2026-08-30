@@ -1,0 +1,42 @@
+declare const styles:
+  & Readonly<{ "container": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "nameCol": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "nameCol": string }>
+  & Readonly<{ "interactive": string }>
+  & Readonly<{ "nameCol": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "nameCol": string }>
+  & Readonly<{ "slot": string }>
+  & Readonly<{ "row": string }>
+  & Readonly<{ "table": string }>
+  & Readonly<{ "interactive": string }>
+  & Readonly<{ "interactive": string }>
+  & Readonly<{ "cell": string }>
+  & Readonly<{ "name": string }>
+  & Readonly<{ "value": string }>
+  & Readonly<{ "expandBtn": string }>
+  & Readonly<{ "expandBtn": string }>
+  & Readonly<{ "expandBtn": string }>
+  & Readonly<{ "expandPlaceholder": string }>
+  & Readonly<{ "chevron": string }>
+  & Readonly<{ "chevronOpen": string }>
+  & Readonly<{ "row": string }>
+  & Readonly<{ "row": string }>
+  & Readonly<{ "row": string }>
+  & Readonly<{ "row": string }>
+  & Readonly<{ "row": string }>
+  & Readonly<{ "skeletonRows": string }>
+  & Readonly<{ "skeletonRow": string }>
+  & Readonly<{ "skeletonRow": string }>
+  & Readonly<{ "skeletonLine": string }>
+  & Readonly<{ "skeletonName": string }>
+  & Readonly<{ "skeletonValue": string }>
+;
+export default styles;
