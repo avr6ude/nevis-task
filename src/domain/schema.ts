@@ -1,24 +1,9 @@
 import { z } from "zod";
 
-export const MONTHS = [
-  "Feb 2024",
-  "Mar 2024",
-  "Apr 2024",
-  "May 2024",
-  "Jun 2024",
-  "Jul 2024",
-  "Aug 2024",
-  "Sep 2024",
-  "Oct 2024",
-  "Nov 2024",
-  "Dec 2024",
-  "Jan 2025",
-] as const;
-
 export const clientNodeSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  values: z.array(z.number()).length(MONTHS.length),
+  values: z.array(z.number()),
   image: z.string().optional(),
   get branches() {
     return z.array(clientNodeSchema).optional();
@@ -32,3 +17,32 @@ export const clientNodeSchema = z.object({
 });
 
 export type ClientNode = z.infer<typeof clientNodeSchema>;
+
+export const clientsDataSchema = z
+  .object({
+    months: z.array(z.string().min(1)).min(1),
+    root: clientNodeSchema,
+  })
+  .superRefine((data, ctx) => {
+    const expected = data.months.length;
+
+    const walk = (node: ClientNode, path: (string | number)[]) => {
+      if (node.values.length !== expected) {
+        ctx.addIssue({
+          code: "custom",
+          path: [...path, "values"],
+          message: `expected ${expected} values to match months, got ${node.values.length}`,
+        });
+      }
+      for (const key of ["branches", "employees", "channels"] as const) {
+        const children = node[key] ?? [];
+        for (const [i, child] of children.entries()) {
+          walk(child, [...path, key, i]);
+        }
+      }
+    };
+
+    walk(data.root, ["root"]);
+  });
+
+export type ClientsData = z.infer<typeof clientsDataSchema>;

@@ -49,7 +49,6 @@
         "rules": {
           "a11y": {
             "noNoninteractiveElementToInteractiveRole": "off",
-            "noNoninteractiveTabindex": "off",
             "noRedundantRoles": "off"
           }
         }

@@ -1,20 +1,21 @@
-import { MONTHS } from "@domain/schema";
 import styles from "./Skeletons.module.css";
 
-const BAR_HEIGHTS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94];
+const BARS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94].map(
+  (height, id) => ({ id, height }),
+);
 const PLACEHOLDER_ROWS = [0, 1, 2, 3];
 const PLACEHOLDER_CELLS = [0, 1, 2, 3, 4, 5];
 
 export function ChartSkeleton() {
   return (
     <div className={styles.bars} aria-hidden="true">
-      {MONTHS.map((month, i) => (
+      {BARS.map(({ id, height }) => (
         <span
-          key={month}
+          key={id}
           className={styles.bar}
           style={{
-            height: `${BAR_HEIGHTS[i]}%`,
-            animationDelay: `${i * 60}ms`,
+            height: `${height}%`,
+            animationDelay: `${id * 60}ms`,
           }}
         />
       ))}

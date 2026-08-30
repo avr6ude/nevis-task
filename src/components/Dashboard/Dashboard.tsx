@@ -12,14 +12,13 @@ import { toChildStack } from "@domain/childStack";
 import { deepestExpanded, pathTo } from "@domain/clients";
 import { useExpandedRows } from "@hooks/useExpandedRows";
 import { useMemo } from "react";
-import type { ClientNode } from "@/types";
+import type { ClientsData } from "@/types";
 import styles from "./Dashboard.module.css";
 
 export function Dashboard() {
   const clients = useClients();
-  const root = clients.data;
 
-  if (root) return <DashboardContent root={root} />;
+  if (clients.data) return <DashboardContent data={clients.data} />;
 
   return (
     <main className="page">
@@ -57,14 +56,15 @@ export function Dashboard() {
   );
 }
 
-function DashboardContent({ root }: { root: ClientNode }) {
+function DashboardContent({ data }: { data: ClientsData }) {
+  const { months, root } = data;
   const { expandedIds, toggle } = useExpandedRows([root.id]);
 
   const focus = useMemo(
     () => deepestExpanded(root, expandedIds),
     [root, expandedIds],
   );
-  const stack = useMemo(() => toChildStack(focus), [focus]);
+  const stack = useMemo(() => toChildStack(focus, months), [focus, months]);
   const trail = useMemo(() => pathTo(root, focus.id), [root, focus]);
 
   const scope = focus.name;
@@ -109,6 +109,7 @@ function DashboardContent({ root }: { root: ClientNode }) {
           <ErrorBoundary label="table">
             <ClientsTable
               root={root}
+              months={months}
               expandedIds={expandedIds}
               onToggle={toggle}
             />

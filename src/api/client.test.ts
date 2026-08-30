@@ -22,7 +22,9 @@ afterEach(() => {
 describe("fetchClients", () => {
   it("returns the parsed tree", async () => {
     stubFetch(async () => ok());
-    await expect(fetchClients()).resolves.toMatchObject({ name: "Company" });
+    await expect(fetchClients()).resolves.toMatchObject({
+      root: { name: "Company" },
+    });
   });
 
   it("reports an unreachable server as offline", async () => {
@@ -69,9 +71,25 @@ describe("fetchClients", () => {
 
   it("rejects a node nested deep in the tree that is malformed", async () => {
     const broken = structuredClone(companyData) as Record<string, unknown>;
-    const branches = broken.branches as Record<string, unknown>[];
+    const root = broken.root as Record<string, unknown>;
+    const branches = root.branches as Record<string, unknown>[];
     const employees = branches[0].employees as Record<string, unknown>[];
     employees[0].values = [1, 2, 3];
+
+    stubFetch(
+      async () =>
+        new Response(JSON.stringify(broken), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+    );
+
+    await expect(fetchClients()).rejects.toMatchObject({ kind: "invalid" });
+  });
+
+  it("rejects a tree whose values do not line up with the months", async () => {
+    const broken = structuredClone(companyData) as Record<string, unknown>;
+    broken.months = ["Jan 2024", "Feb 2024"];
 
     stubFetch(
       async () =>

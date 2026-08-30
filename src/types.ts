@@ -1,1 +1,1 @@
-export type { ClientNode } from "@domain/schema";
+export type { ClientNode, ClientsData } from "@domain/schema";

@@ -6,9 +6,9 @@ import { render, screen, within } from "@testing-library/react";
 import axe from "axe-core";
 import { describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
-import type { ClientNode } from "@/types";
+import type { ClientsData } from "@/types";
 
-const company = companyData as ClientNode;
+const { months, root: company } = companyData as ClientsData;
 
 async function violations(container: HTMLElement) {
   const results = await axe.run(container, {
@@ -23,7 +23,12 @@ async function violations(container: HTMLElement) {
 function Table({ open }: { open: string[] }) {
   const { expandedIds, toggle } = useExpandedRows(open);
   return (
-    <ClientsTable root={company} expandedIds={expandedIds} onToggle={toggle} />
+    <ClientsTable
+      root={company}
+      months={months}
+      expandedIds={expandedIds}
+      onToggle={toggle}
+    />
   );
 }
 
@@ -44,7 +49,10 @@ describe("accessibility", () => {
 
   it("has no violations on the chart", async () => {
     const { container } = render(
-      <ClientsChart stack={toChildStack(company)} scopeLabel="Company" />,
+      <ClientsChart
+        stack={toChildStack(company, months)}
+        scopeLabel="Company"
+      />,
     );
     expect(await violations(container)).toEqual([]);
   });
@@ -78,7 +86,12 @@ describe("accessibility", () => {
   });
 
   it("exposes the chart's numbers as text", () => {
-    render(<ClientsChart stack={toChildStack(company)} scopeLabel="Company" />);
+    render(
+      <ClientsChart
+        stack={toChildStack(company, months)}
+        scopeLabel="Company"
+      />,
+    );
 
     const table = screen.getByRole("table", { name: /Chart data for Company/ });
     expect(within(table).getAllByRole("row")).toHaveLength(13);

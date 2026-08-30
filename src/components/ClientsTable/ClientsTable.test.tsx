@@ -3,15 +3,20 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
-import type { ClientNode } from "@/types";
+import type { ClientsData } from "@/types";
 import { ClientsTable } from "./ClientsTable";
 
-const company = companyData as ClientNode;
+const { months, root: company } = companyData as ClientsData;
 
 function Harness() {
   const { expandedIds, toggle } = useExpandedRows([company.id]);
   return (
-    <ClientsTable root={company} expandedIds={expandedIds} onToggle={toggle} />
+    <ClientsTable
+      root={company}
+      months={months}
+      expandedIds={expandedIds}
+      onToggle={toggle}
+    />
   );
 }
 

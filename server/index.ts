@@ -2,14 +2,14 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import express from "express";
 import { z } from "zod";
-import { clientNodeSchema } from "../src/domain/schema.js";
+import { clientsDataSchema } from "../src/domain/schema.js";
 
 const dataPath = fileURLToPath(
   new URL("../src/data/company.json", import.meta.url),
 );
 const avatarsDir = fileURLToPath(new URL("./avatars/", import.meta.url));
 
-const parsed = clientNodeSchema.safeParse(
+const parsed = clientsDataSchema.safeParse(
   JSON.parse(readFileSync(dataPath, "utf-8")),
 );
 
@@ -48,7 +48,7 @@ app.get("/api/clients", async (req, res) => {
   }
 
   if (req.query.bad === "1") {
-    res.json({ id: "broken", name: "Company", values: [1, 2, 3] });
+    res.json({ months: ["Jan 2024"], root: { id: "broken", name: "Company" } });
     return;
   }
 

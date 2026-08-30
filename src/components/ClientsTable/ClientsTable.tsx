@@ -1,7 +1,6 @@
 import { Avatar } from "@components/Avatar/Avatar";
 import { ChevronRight } from "@components/icons/ChevronRight";
 import { getChildren } from "@domain/clients";
-import { MONTHS } from "@domain/schema";
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -17,20 +16,19 @@ import styles from "./ClientsTable.module.css";
 
 export interface ClientsTableProps {
   root: ClientNode;
+  months: string[];
   expandedIds: Set<string>;
   onToggle: (id: string) => void;
 }
 
-const CELL_COUNT = MONTHS.length + 1;
-
-function MonthHeader() {
+function MonthHeader({ months }: { months: string[] }) {
   return (
     <thead>
       <tr role="row">
         <th role="columnheader" scope="col" className={styles.nameCol}>
           Name
         </th>
-        {MONTHS.map((month) => (
+        {months.map((month) => (
           <th role="columnheader" scope="col" key={month}>
             {month}
           </th>
@@ -41,21 +39,7 @@ function MonthHeader() {
 }
 
 export function ClientsTableShell({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <div
-        className={styles.container}
-        tabIndex={0}
-        role="group"
-        aria-label="Month columns"
-      >
-        <table className={styles.table}>
-          <MonthHeader />
-        </table>
-      </div>
-      <div className={styles.slot}>{children}</div>
-    </>
-  );
+  return <div className={styles.slot}>{children}</div>;
 }
 
 interface FlatRow {
@@ -117,9 +101,11 @@ function columnOf(target: EventTarget | null): number | null {
 
 export function ClientsTable({
   root,
+  months,
   expandedIds,
   onToggle,
 }: ClientsTableProps) {
+  const cellCount = months.length + 1;
   const [active, setActive] = useState<Active>({
     rowId: root.id,
     column: null,
@@ -156,7 +142,7 @@ export function ClientsTable({
         if (!onCell) {
           if (hasChildren && !expanded) onToggle(node.id);
           else moveTo(node.id, 0);
-        } else if (column < CELL_COUNT - 1) {
+        } else if (column < cellCount - 1) {
           moveTo(node.id, column + 1);
         }
         break;
@@ -198,7 +184,7 @@ export function ClientsTable({
 
       case "End": {
         event.preventDefault();
-        if (onCell && !event.ctrlKey) moveTo(node.id, CELL_COUNT - 1);
+        if (onCell && !event.ctrlKey) moveTo(node.id, cellCount - 1);
         else {
           const last = rows[rows.length - 1];
           if (last) moveTo(last.node.id, column);
@@ -233,7 +219,7 @@ export function ClientsTable({
         aria-label="Clients by company, branch, adviser and acquisition channel"
         className={styles.table}
       >
-        <MonthHeader />
+        <MonthHeader months={months} />
 
         <tbody>
           {rows.map((row, index) => {
@@ -308,7 +294,7 @@ export function ClientsTable({
                   </div>
                 </td>
 
-                {MONTHS.map((month, monthIndex) => {
+                {months.map((month, monthIndex) => {
                   const column = monthIndex + 1;
                   return (
                     <td

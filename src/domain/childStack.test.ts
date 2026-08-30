@@ -1,11 +1,10 @@
 import { describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
-import type { ClientNode } from "@/types";
+import type { ClientNode, ClientsData } from "@/types";
 import { toChildStack } from "./childStack";
 import { deepestExpanded, findNode } from "./clients";
-import { MONTHS } from "./schema";
 
-const company = companyData as ClientNode;
+const { months: MONTHS, root: company } = companyData as ClientsData;
 
 function node(id: string): ClientNode {
   const found = findNode(company, id);
@@ -25,13 +24,15 @@ function forMonth(stack: ReturnType<typeof toChildStack>, month: string) {
 
 describe("toChildStack", () => {
   it("stacks the level directly beneath the focused node", () => {
-    expect(toChildStack(company).series.map((s) => s.label)).toEqual([
+    expect(toChildStack(company, MONTHS).series.map((s) => s.label)).toEqual([
       "Branch 1",
       "Branch 2",
       "Branch 3",
     ]);
 
-    expect(toChildStack(node(BRANCH_1)).series.map((s) => s.label)).toEqual([
+    expect(
+      toChildStack(node(BRANCH_1), MONTHS).series.map((s) => s.label),
+    ).toEqual([
       "Anna Blackwood",
       "James Walker",
       "Maria Gutierrez",
@@ -41,16 +42,14 @@ describe("toChildStack", () => {
   });
 
   it("reproduces the design's channel legend when scoped to an adviser", () => {
-    expect(toChildStack(node(ANNA)).series.map((s) => s.label)).toEqual([
-      "Existing clients",
-      "New organic",
-      "New paid",
-    ]);
+    expect(toChildStack(node(ANNA), MONTHS).series.map((s) => s.label)).toEqual(
+      ["Existing clients", "New organic", "New paid"],
+    );
   });
 
   it("shows a leaf as a single band of its own value", () => {
     const branch2 = node(BRANCH_2);
-    const stack = toChildStack(branch2);
+    const stack = toChildStack(branch2, MONTHS);
 
     expect(stack.series).toEqual([{ key: branch2.id, label: "Branch 2" }]);
     stack.data.forEach((datum, i) => {
@@ -60,11 +59,13 @@ describe("toChildStack", () => {
   });
 
   it("returns one datum per month, in order", () => {
-    expect(toChildStack(company).data.map((d) => d.month)).toEqual([...MONTHS]);
+    expect(toChildStack(company, MONTHS).data.map((d) => d.month)).toEqual([
+      ...MONTHS,
+    ]);
   });
 
   it("totals every segment it draws", () => {
-    const stack = toChildStack(company);
+    const stack = toChildStack(company, MONTHS);
     for (const datum of stack.data) {
       const summed = stack.series.reduce(
         (t, s) => t + (datum[s.key] as number),
@@ -75,17 +76,17 @@ describe("toChildStack", () => {
   });
 
   it("keeps the node's own figure alongside the summed children", () => {
-    const may = forMonth(toChildStack(company), "May 2024");
+    const may = forMonth(toChildStack(company, MONTHS), "May 2024");
     expect(may.total).toBe(279);
     expect(may.reported).toBe(301);
 
-    const aug = forMonth(toChildStack(node(BRANCH_1)), "Aug 2024");
+    const aug = forMonth(toChildStack(node(BRANCH_1), MONTHS), "Aug 2024");
     expect(aug.total).toBe(216);
     expect(aug.reported).toBe(214);
   });
 
   it("agrees with the node's own figure where the data reconciles", () => {
-    const feb = forMonth(toChildStack(company), "Feb 2024");
+    const feb = forMonth(toChildStack(company, MONTHS), "Feb 2024");
     expect(feb.total).toBe(feb.reported);
   });
 });

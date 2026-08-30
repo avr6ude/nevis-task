@@ -1,17 +1,17 @@
 import { useCallback } from "react";
 import useSWR from "swr";
-import type { ClientNode } from "@/types";
+import type { ClientsData } from "@/types";
 import { fetchClients } from "./client";
 
 export const CLIENTS_KEY = "/api/clients";
 
 export type ClientsState =
   | { status: "loading"; data?: undefined; error?: undefined }
-  | { status: "ok"; data: ClientNode; error?: undefined }
+  | { status: "ok"; data: ClientsData; error?: undefined }
   | { status: "error"; data?: undefined; error: Error };
 
 export function useClients(): ClientsState & { refetch: () => void } {
-  const { data, error, mutate } = useSWR<ClientNode, Error>(
+  const { data, error, mutate } = useSWR<ClientsData, Error>(
     CLIENTS_KEY,
     fetchClients,
     { shouldRetryOnError: false },

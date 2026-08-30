@@ -1,6 +1,5 @@
 import type { ClientNode } from "@/types";
 import { getChildren } from "./clients";
-import { MONTHS } from "./schema";
 
 export interface StackSeries {
   key: string;
@@ -19,13 +18,13 @@ export interface ChildStack {
   data: StackDatum[];
 }
 
-export function toChildStack(focus: ClientNode): ChildStack {
+export function toChildStack(focus: ClientNode, months: string[]): ChildStack {
   const children = getChildren(focus) ?? [];
 
   if (children.length === 0) {
     return {
       series: [{ key: focus.id, label: focus.name }],
-      data: MONTHS.map((month, i) => {
+      data: months.map((month, i) => {
         const value = focus.values[i] ?? 0;
         return { month, total: value, reported: value, [focus.id]: value };
       }),
@@ -34,7 +33,7 @@ export function toChildStack(focus: ClientNode): ChildStack {
 
   return {
     series: children.map((child) => ({ key: child.id, label: child.name })),
-    data: MONTHS.map((month, i) => {
+    data: months.map((month, i) => {
       const datum: StackDatum = {
         month,
         total: 0,

@@ -1,4 +1,4 @@
-import { type ClientNode, clientNodeSchema } from "@domain/schema";
+import { type ClientsData, clientsDataSchema } from "@domain/schema";
 
 export type ApiErrorKind = "offline" | "failed" | "invalid";
 
@@ -29,7 +29,7 @@ function debugQuery(): string {
   return query ? `?${query}` : "";
 }
 
-export async function fetchClients(): Promise<ClientNode> {
+export async function fetchClients(): Promise<ClientsData> {
   let res: Response;
 
   try {
@@ -49,7 +49,7 @@ export async function fetchClients(): Promise<ClientNode> {
     throw new ApiError("failed");
   }
 
-  const parsed = clientNodeSchema.safeParse(body);
+  const parsed = clientsDataSchema.safeParse(body);
   if (!parsed.success) {
     throw new ApiError("invalid");
   }

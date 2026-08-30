@@ -35,7 +35,7 @@ describe("useClients", () => {
     expect(result.current.status).toBe("loading");
 
     await waitFor(() => expect(result.current.status).toBe("ok"));
-    expect(result.current.data).toMatchObject({ name: "Company" });
+    expect(result.current.data).toMatchObject({ root: { name: "Company" } });
     expect(result.current.error).toBeUndefined();
   });
 
@@ -65,7 +65,7 @@ describe("useClients", () => {
     act(() => result.current.refetch());
 
     await waitFor(() => expect(result.current.status).toBe("ok"));
-    expect(result.current.data).toMatchObject({ name: "Company" });
+    expect(result.current.data).toMatchObject({ root: { name: "Company" } });
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
