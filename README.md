@@ -34,11 +34,11 @@ states by hand: `/?delay=6000`, `/?fail=1`, `/?bad=1`.
   real node, so nothing is invented at levels the data does not describe.
 - **The chart follows expansion, not selection.** Rows have no selected state in
   the design, so scope is derived: walk down while exactly one child is open.
-  Opening two branches falls back to their common parent.
+  Opening two branches is supposed to fall back to their common parent.
 - **A branch with no advisers charts as itself.** Branch 2 and Branch 3 have no
   children, so the stack is one bar rather than an empty chart.
 - **Every parent figure is recomputed from its children,** because the payload
-  totals do not add up. See below.
+  totals do not add up.
 - **Rows are nodes and columns are months.** Expanding a row reveals its
   children, not a breakdown of one month.
 - **Adviser photos live in the payload.** The design shows them, the data has
@@ -68,7 +68,9 @@ narrow layout have no reference to match.
 
 ## Next
 
-- Virtualise the table with react-window and load subtrees on demand. Twelve
-  nodes fit in the DOM; a real book of clients does not.
+- Virtualise the table with react-window and load subtrees on demand.
 - Keep the expanded rows in the URL so a drilled-in view can be shared.
-- Reconcile the totals with whoever owns the data.
+- Let the user pick the period. The months already come from the API, so a date
+  range is a control and a query param, not a rewrite.
+- Show change as well as level. The brief is about how a book develops over
+  time, and twelve absolute bars do not say whether a branch is growing.
