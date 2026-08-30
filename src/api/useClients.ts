@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import type { ClientsData } from "@/types";
+import type { ClientsData } from "@/domain/schema";
 import { fetchClients } from "./client";
 
 const CLIENTS_KEY = "/api/clients";

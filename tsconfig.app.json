@@ -9,13 +9,7 @@
     "skipLibCheck": true,
     "strict": true,
 
-    "paths": {
-      "@/*": ["./src/*"],
-      "@api/*": ["./src/api/*"],
-      "@domain/*": ["./src/domain/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"]
-    },
+    "paths": { "@/*": ["./src/*"] },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

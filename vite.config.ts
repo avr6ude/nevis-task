@@ -10,13 +10,7 @@ const resolve = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      "@api": resolve("./src/api"),
-      "@domain": resolve("./src/domain"),
-      "@components": resolve("./src/components"),
-      "@hooks": resolve("./src/hooks"),
-      "@": resolve("./src"),
-    },
+    alias: { "@": resolve("./src") },
   },
   css: {
     modules: { localsConvention: "camelCaseOnly" },

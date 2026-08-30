@@ -1,4 +1,4 @@
-import { type ClientsData, clientsDataSchema } from "@domain/schema";
+import { type ClientsData, clientsDataSchema } from "@/domain/schema";
 
 export type ApiErrorKind = "offline" | "failed" | "invalid";
 

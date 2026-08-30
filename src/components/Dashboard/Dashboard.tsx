@@ -1,21 +1,21 @@
-import { useClients } from "@api/useClients";
+import { useMemo } from "react";
+import { useClients } from "@/api/useClients";
 import {
   ChartSkeleton,
   ClientsChart,
   EmptyChart,
-} from "@components/ClientsChart/ClientsChart";
+} from "@/components/ClientsChart/ClientsChart";
 import {
   ClientsTable,
   ClientsTableShell,
   TableSkeleton,
-} from "@components/ClientsTable/ClientsTable";
-import { DataError } from "@components/states/DataError";
-import { ErrorBoundary } from "@components/states/ErrorBoundary";
-import { toChildStack } from "@domain/childStack";
-import { deepestExpanded, pathTo, rollUp } from "@domain/clients";
-import { useExpandedRows } from "@hooks/useExpandedRows";
-import { useMemo } from "react";
-import type { ClientsData } from "@/types";
+} from "@/components/ClientsTable/ClientsTable";
+import { DataError } from "@/components/states/DataError";
+import { ErrorBoundary } from "@/components/states/ErrorBoundary";
+import { toChildStack } from "@/domain/childStack";
+import { deepestExpanded, pathTo, rollUp } from "@/domain/clients";
+import type { ClientsData } from "@/domain/schema";
+import { useExpandedRows } from "@/hooks/useExpandedRows";
 import styles from "./Dashboard.module.css";
 
 export function Dashboard() {

@@ -1,6 +1,3 @@
-import { Avatar } from "@components/Avatar/Avatar";
-import { ChevronRight } from "@components/icons/ChevronRight";
-import { getChildren } from "@domain/clients";
 import {
   type KeyboardEvent,
   type ReactNode,
@@ -10,8 +7,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { Button } from "react-aria-components";
-import type { ClientNode } from "@/types";
+import { Avatar } from "@/components/Avatar/Avatar";
+import { ChevronRight } from "@/components/icons/ChevronRight";
+import { getChildren } from "@/domain/clients";
+import type { ClientNode } from "@/domain/schema";
 import styles from "./ClientsTable.module.css";
 
 export interface ClientsTableProps {
@@ -265,12 +264,12 @@ export function ClientsTable({
                     style={{ paddingLeft: `${(level - 1) * 28}px` }}
                   >
                     {hasChildren ? (
-                      <Button
-                        slot={null}
-                        excludeFromTabOrder
+                      <button
+                        type="button"
+                        tabIndex={-1}
                         aria-label={expanded ? "Collapse" : "Expand"}
                         className={styles.expandBtn}
-                        onPress={() => {
+                        onClick={() => {
                           onToggle(node.id);
                           moveTo(node.id, null);
                         }}
@@ -282,7 +281,7 @@ export function ClientsTable({
                               : styles.chevron
                           }
                         />
-                      </Button>
+                      </button>
                     ) : (
                       <span
                         className={styles.expandPlaceholder}

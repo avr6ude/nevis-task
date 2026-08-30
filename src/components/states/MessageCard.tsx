@@ -1,4 +1,3 @@
-import { Button } from "react-aria-components";
 import styles from "./MessageCard.module.css";
 
 export interface MessageCardAction {
@@ -18,9 +17,13 @@ export function MessageCard({ title, detail, action }: MessageCardProps) {
       <p className={styles.title}>{title}</p>
       <p className={styles.detail}>{detail}</p>
       {action && (
-        <Button className={styles.action} onPress={action.onPress}>
+        <button
+          type="button"
+          className={styles.action}
+          onClick={action.onPress}
+        >
           {action.label}
-        </Button>
+        </button>
       )}
     </div>
   );

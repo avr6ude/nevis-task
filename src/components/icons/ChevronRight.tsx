@@ -1,14 +1,13 @@
 export interface IconProps {
   className?: string;
-  size?: number;
 }
 
-export function ChevronRight({ className, size = 10 }: IconProps) {
+export function ChevronRight({ className }: IconProps) {
   return (
     <svg
       className={className}
-      width={size}
-      height={size}
+      width={10}
+      height={10}
       viewBox="0 0 10 10"
       fill="none"
       aria-hidden="true"

@@ -1,9 +1,9 @@
-import { useExpandedRows } from "@hooks/useExpandedRows";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
-import type { ClientsData } from "@/types";
+import type { ClientsData } from "@/domain/schema";
+import { useExpandedRows } from "@/hooks/useExpandedRows";
 import { ClientsTable } from "./ClientsTable";
 
 const { months, root: company } = companyData as ClientsData;

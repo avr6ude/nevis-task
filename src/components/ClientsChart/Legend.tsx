@@ -1,4 +1,4 @@
-import type { StackSeries } from "@domain/childStack";
+import type { StackSeries } from "@/domain/childStack";
 import styles from "./Legend.module.css";
 
 export interface LegendProps {

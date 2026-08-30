@@ -1,5 +1,3 @@
-import type { ChildStack, StackDatum } from "@domain/childStack";
-import { useElementWidth } from "@hooks/useElementWidth";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { GridRows } from "@visx/grid";
 import { Group } from "@visx/group";
@@ -7,6 +5,8 @@ import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { BarStack } from "@visx/shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 import { useEffect, useId, useMemo, useRef } from "react";
+import type { ChildStack, StackDatum } from "@/domain/childStack";
+import { useElementWidth } from "@/hooks/useElementWidth";
 import styles from "./ClientsChart.module.css";
 import { Legend } from "./Legend";
 

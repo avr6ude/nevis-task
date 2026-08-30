@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
-import type { ClientNode, ClientsData } from "@/types";
+import type { ClientNode, ClientsData } from "@/domain/schema";
 import { toChildStack } from "./childStack";
 import { deepestExpanded, getChildren, rollUp } from "./clients";
 

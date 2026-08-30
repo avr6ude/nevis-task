@@ -1,4 +1,4 @@
-import type { ClientNode } from "@/types";
+import type { ClientNode } from "@/domain/schema";
 
 export function getChildren(node: ClientNode): ClientNode[] | undefined {
   return node.branches ?? node.employees ?? node.channels;

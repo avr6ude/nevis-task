@@ -1,4 +1,4 @@
-import type { ClientNode } from "@/types";
+import type { ClientNode } from "@/domain/schema";
 import { getChildren } from "./clients";
 
 export interface StackSeries {

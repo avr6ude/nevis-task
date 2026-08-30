@@ -1,4 +1,4 @@
-import { ApiError, type ApiErrorKind } from "@api/client";
+import { ApiError, type ApiErrorKind } from "@/api/client";
 import { MessageCard } from "./MessageCard";
 
 interface ErrorCopy {

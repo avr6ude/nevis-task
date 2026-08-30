@@ -1,12 +1,12 @@
-import { ClientsChart } from "@components/ClientsChart/ClientsChart";
-import { ClientsTable } from "@components/ClientsTable/ClientsTable";
-import { toChildStack } from "@domain/childStack";
-import { useExpandedRows } from "@hooks/useExpandedRows";
 import { render, screen, within } from "@testing-library/react";
 import axe from "axe-core";
 import { describe, expect, it } from "vitest";
+import { ClientsChart } from "@/components/ClientsChart/ClientsChart";
+import { ClientsTable } from "@/components/ClientsTable/ClientsTable";
 import companyData from "@/data/company.json";
-import type { ClientsData } from "@/types";
+import { toChildStack } from "@/domain/childStack";
+import type { ClientsData } from "@/domain/schema";
+import { useExpandedRows } from "@/hooks/useExpandedRows";
 
 const { months, root: company } = companyData as ClientsData;
 

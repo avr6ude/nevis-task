@@ -1,5 +1,5 @@
-import { avatarColor, initials } from "@domain/identity";
 import { useState } from "react";
+import { avatarColor, initials } from "@/domain/identity";
 import styles from "./Avatar.module.css";
 
 export interface AvatarProps {
