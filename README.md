@@ -34,7 +34,7 @@ states by hand: `/?delay=6000`, `/?fail=1`, `/?bad=1`.
   real node, so nothing is invented at levels the data does not describe.
 - **The chart follows expansion, not selection.** Rows have no selected state in
   the design, so scope is derived: walk down while exactly one child is open.
-  Opening two branches is supposed to fall back to their common parent.
+  Opening two branches falls back to their common parent.
 - **A branch with no advisers charts as itself.** Branch 2 and Branch 3 have no
   children, so the stack is one bar rather than an empty chart.
 - **Every parent figure is recomputed from its children,** because the payload
