@@ -219,6 +219,13 @@ function InnerChart({
             }
           </BarStack>
           <AxisLeft
+            label="Clients"
+            labelOffset={28}
+            labelProps={{
+              fill: "var(--color-ink-secondary)",
+              fontSize: 11,
+              textAnchor: "middle",
+            }}
             scale={yScale}
             numTicks={4}
             hideAxisLine

@@ -38,5 +38,6 @@ declare const styles:
   & Readonly<{ "skeletonLine": string }>
   & Readonly<{ "skeletonName": string }>
   & Readonly<{ "skeletonValue": string }>
+  & Readonly<{ "caption": string }>
 ;
 export default styles;
