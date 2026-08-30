@@ -1,9 +1,9 @@
-.clients-table-container {
+.container {
   overflow-x: auto;
   width: 100%;
 }
 
-.clients-table {
+.table {
   border-collapse: collapse;
   width: 100%;
   min-width: 900px;
@@ -11,7 +11,7 @@
   color: var(--color-ink);
 }
 
-.clients-table thead th {
+.table thead th {
   background: var(--color-surface);
   text-align: right;
   font-weight: 400;
@@ -22,18 +22,18 @@
   vertical-align: bottom;
 }
 
-.clients-table td {
+.table td {
   padding: 0 8px;
   vertical-align: middle;
 }
 
-.clients-table th:last-child,
-.clients-table td:last-child {
+.table th:last-child,
+.table td:last-child {
   padding-right: 24px;
 }
 
-.clients-table th.clients-table__name-col,
-.clients-table td.clients-table__name-col {
+.table th.nameCol,
+.table td.nameCol {
   position: sticky;
   left: 0;
   z-index: 1;
@@ -43,43 +43,43 @@
   background: var(--color-surface);
 }
 
-.clients-table__row--interactive:hover .clients-table__name-col {
+.interactive:hover .nameCol {
   background: color-mix(in srgb, var(--color-ink) 4%, var(--color-surface));
 }
 
-.clients-table thead th.clients-table__name-col {
+.table thead th.nameCol {
   text-align: left;
 }
 
-.clients-table__slot {
+.slot {
   padding: 0 24px 0 16px;
 }
 
-.clients-table__row {
+.row {
   height: var(--row-h);
   border-bottom: 1px solid var(--color-line);
 }
 
-.clients-table tbody tr:last-child {
+.table tbody tr:last-child {
   border-bottom: none;
 }
 
-.clients-table__row--interactive {
+.interactive {
   cursor: pointer;
 }
 
-.clients-table__row--interactive:hover {
+.interactive:hover {
   background: var(--color-row-hover);
 }
 
-.clients-table__cell {
+.cell {
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: var(--row-h);
 }
 
-.clients-table__name {
+.name {
   font-size: 14px;
   line-height: 20px;
   color: var(--color-ink);
@@ -88,14 +88,14 @@
   text-overflow: ellipsis;
 }
 
-.clients-table__value {
+.value {
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: var(--color-ink);
 }
 
-.clients-table__expand-btn {
+.expandBtn {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -111,56 +111,56 @@
   color: var(--color-ink-secondary);
 }
 
-.clients-table__expand-btn::after {
+.expandBtn::after {
   content: "";
   position: absolute;
   inset: -14px;
 }
 
-.clients-table__expand-btn:hover {
+.expandBtn:hover {
   color: var(--color-ink);
 }
 
-.clients-table__expand-placeholder {
+.expandPlaceholder {
   display: inline-block;
   width: 16px;
   height: 16px;
   flex: 0 0 auto;
 }
 
-.clients-table__chevron {
+.chevron {
   display: block;
   transition: transform 0.12s ease;
 }
 
-.clients-table__chevron--open {
+.chevronOpen {
   transform: rotate(90deg);
 }
 
-.clients-table__row:focus-visible {
+.row:focus-visible {
   box-shadow: none;
   outline: none;
 }
 
-.clients-table__row:focus-visible > td {
+.row:focus-visible > td {
   box-shadow:
     inset 0 2px 0 var(--color-ink),
     inset 0 -2px 0 var(--color-ink);
 }
 
-.clients-table__row:focus-visible > td:first-child {
+.row:focus-visible > td:first-child {
   box-shadow:
     inset 2px 2px 0 var(--color-ink),
     inset 0 -2px 0 var(--color-ink);
 }
 
-.clients-table__row:focus-visible > td:last-child {
+.row:focus-visible > td:last-child {
   box-shadow:
     inset -2px 2px 0 var(--color-ink),
     inset 0 -2px 0 var(--color-ink);
 }
 
-.clients-table__row > td:focus-visible {
+.row > td:focus-visible {
   outline: none;
   box-shadow: inset 0 0 0 2px var(--color-ink);
 }

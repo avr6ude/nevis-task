@@ -18,6 +18,9 @@ export default defineConfig({
       "@": resolve("./src"),
     },
   },
+  css: {
+    modules: { localsConvention: "camelCaseOnly" },
+  },
   server: {
     proxy: {
       "/api": `http://localhost:${API_PORT}`,

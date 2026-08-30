@@ -1,4 +1,4 @@
-.skeleton__bars {
+.skeletonBars {
   display: flex;
   align-items: flex-end;
   gap: 12px;
@@ -7,19 +7,19 @@
   padding-left: 36px;
 }
 
-.skeleton__bar {
+.skeletonBar {
   flex: 1 1 0;
   border-radius: 6px;
   background: var(--color-line);
-  animation: skeleton-pulse 1.6s ease-in-out infinite;
+  animation: pulse 1.6s ease-in-out infinite;
 }
 
-.skeleton__rows {
+.skeletonRows {
   display: flex;
   flex-direction: column;
 }
 
-.skeleton__row {
+.skeletonRow {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -27,29 +27,29 @@
   border-bottom: 1px solid var(--color-line);
 }
 
-.skeleton__row:last-child {
+.skeletonRow:last-child {
   border-bottom: none;
 }
 
-.skeleton__line {
+.skeletonLine {
   height: 10px;
   border-radius: 5px;
   background: var(--color-line);
-  animation: skeleton-pulse 1.6s ease-in-out infinite;
+  animation: pulse 1.6s ease-in-out infinite;
 }
 
-.skeleton__line--name {
+.skeletonLineName {
   width: 140px;
   flex: 0 0 auto;
 }
 
-.skeleton__line--value {
+.skeletonLineValue {
   flex: 1 1 0;
   max-width: 48px;
   margin-left: auto;
 }
 
-@keyframes skeleton-pulse {
+@keyframes pulse {
   0%,
   100% {
     opacity: 1;
@@ -59,7 +59,7 @@
   }
 }
 
-.data-error {
+.error {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,19 +67,19 @@
   padding: 56px 24px;
 }
 
-.data-error__title {
+.errorTitle {
   margin: 0;
   font-size: 16px;
   font-weight: 500;
 }
 
-.data-error__detail {
+.errorDetail {
   margin: 6px 0 0;
   max-width: 44ch;
   color: var(--color-ink-secondary);
 }
 
-.data-error__retry {
+.errorRetry {
   margin-top: 20px;
   border: none;
   background: var(--color-ink);
@@ -91,15 +91,15 @@
   transition: opacity 0.12s ease;
 }
 
-.data-error__retry[data-hovered] {
+.errorRetry[data-hovered] {
   opacity: 0.85;
 }
 
-.data-error__retry[data-pressed] {
+.errorRetry[data-pressed] {
   opacity: 0.7;
 }
 
-.chart-unavailable {
+.chartUnavailable {
   margin: 0;
   color: var(--color-ink-secondary);
 }

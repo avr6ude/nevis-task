@@ -1,17 +1,17 @@
 import { ApiError, type ApiErrorKind } from "@api/client";
 import { MONTHS } from "@domain/clients";
 import { Button } from "react-aria-components";
-import "./States.css";
+import styles from "./States.module.css";
 
 const BAR_HEIGHTS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94];
 
 export function ChartSkeleton() {
   return (
-    <div className="skeleton__bars" aria-hidden="true">
+    <div className={styles.skeletonBars} aria-hidden="true">
       {MONTHS.map((month, i) => (
         <span
           key={month}
-          className="skeleton__bar"
+          className={styles.skeletonBar}
           style={{
             height: `${BAR_HEIGHTS[i]}%`,
             animationDelay: `${i * 60}ms`,
@@ -24,15 +24,18 @@ export function ChartSkeleton() {
 
 export function TableSkeleton() {
   return (
-    <div className="skeleton__rows" aria-hidden="true">
+    <div className={styles.skeletonRows} aria-hidden="true">
       {[0, 1, 2, 3].map((row) => (
-        <div key={row} className="skeleton__row">
+        <div key={row} className={styles.skeletonRow}>
           <span
-            className="skeleton__line skeleton__line--name"
+            className={`${styles.skeletonLine} ${styles.skeletonLineName}`}
             style={{ marginLeft: row === 0 ? 0 : 28 }}
           />
           {[0, 1, 2, 3, 4, 5].map((cell) => (
-            <span key={cell} className="skeleton__line skeleton__line--value" />
+            <span
+              key={cell}
+              className={`${styles.skeletonLine} ${styles.skeletonLineValue}`}
+            />
           ))}
         </div>
       ))}
@@ -67,10 +70,10 @@ export function DataError({ error, onRetry }: DataErrorProps) {
     error instanceof ApiError ? MESSAGES[error.kind] : MESSAGES.failed;
 
   return (
-    <div className="data-error" role="alert">
-      <p className="data-error__title">{copy.title}</p>
-      <p className="data-error__detail">{copy.detail}</p>
-      <Button className="data-error__retry" onPress={onRetry}>
+    <div className={styles.error} role="alert">
+      <p className={styles.errorTitle}>{copy.title}</p>
+      <p className={styles.errorDetail}>{copy.detail}</p>
+      <Button className={styles.errorRetry} onPress={onRetry}>
         Try again
       </Button>
     </div>
@@ -79,5 +82,5 @@ export function DataError({ error, onRetry }: DataErrorProps) {
 
 /** Quiet placeholder for the chart, which has no numbers to draw. */
 export function ChartUnavailable({ message }: { message: string }) {
-  return <p className="chart-unavailable">{message}</p>;
+  return <p className={styles.chartUnavailable}>{message}</p>;
 }

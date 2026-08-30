@@ -4,28 +4,28 @@
   gap: 20px;
 }
 
-.dashboard__panel {
+.panel {
   padding: 24px;
 }
 
-.dashboard__panel--table {
+.panelTable {
   padding: 8px 0;
 }
 
-.dashboard__chart-placeholder {
+.chartPlaceholder {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 360px;
 }
 
-.dashboard__scope {
+.scope {
   margin: 0 0 16px;
   font-size: 13px;
   color: var(--color-ink-secondary);
 }
 
-.dashboard__scope-sep {
+.scopeSep {
   padding: 0 6px;
   color: var(--color-ink);
   opacity: 0.35;

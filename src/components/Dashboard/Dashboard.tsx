@@ -15,7 +15,7 @@ import { deepestExpanded, pathTo } from "@domain/clients";
 import { useExpandedRows } from "@hooks/useExpandedRows";
 import { useMemo } from "react";
 import type { ClientNode } from "@/types";
-import "./Dashboard.css";
+import styles from "./Dashboard.module.css";
 
 export function Dashboard() {
   const clients = useClients();
@@ -31,9 +31,9 @@ export function Dashboard() {
         {clients.status === "loading" && "Loading client data…"}
       </span>
 
-      <div className="dashboard">
-        <section className="card dashboard__panel" aria-label="Client trend">
-          <div className="dashboard__chart-placeholder">
+      <div className={styles.dashboard}>
+        <section className={`card ${styles.panel}`} aria-label="Client trend">
+          <div className={styles.chartPlaceholder}>
             {clients.status === "loading" ? (
               <ChartSkeleton />
             ) : (
@@ -43,7 +43,7 @@ export function Dashboard() {
         </section>
 
         <section
-          className="card dashboard__panel dashboard__panel--table"
+          className={`card ${styles.panel} ${styles.panelTable}`}
           aria-label="Client breakdown"
         >
           <ClientsTableShell>
@@ -79,17 +79,17 @@ function DashboardContent({ root }: { root: ClientNode }) {
         Client data loaded.
       </span>
 
-      <div className="dashboard">
+      <div className={styles.dashboard}>
         <section
-          className="card dashboard__panel"
+          className={`card ${styles.panel}`}
           aria-label={`Client trend for ${scope}`}
         >
           {trail.length > 0 && (
-            <p className="dashboard__scope">
+            <p className={styles.scope}>
               {trail.map((node, i) => (
                 <span key={node.id}>
                   {i > 0 && (
-                    <span className="dashboard__scope-sep" aria-hidden="true">
+                    <span className={styles.scopeSep} aria-hidden="true">
                       /
                     </span>
                   )}
@@ -103,7 +103,7 @@ function DashboardContent({ root }: { root: ClientNode }) {
         </section>
 
         <section
-          className="card dashboard__panel dashboard__panel--table"
+          className={`card ${styles.panel} ${styles.panelTable}`}
           aria-label={`Client breakdown for ${scope}`}
         >
           <ClientsTable

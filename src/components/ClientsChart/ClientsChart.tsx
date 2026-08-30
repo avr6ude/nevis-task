@@ -6,8 +6,8 @@ import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { BarStack } from "@visx/shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import styles from "./ClientsChart.module.css";
 import { Legend } from "./Legend";
-import "./ClientsChart.css";
 
 export interface ClientsChartProps {
   stack: ChildStack;
@@ -142,7 +142,7 @@ function InnerChart({
     shortLabels ? month.slice(0, 3) : month;
 
   return (
-    <div className="chart__svg-wrap" ref={wrapRef}>
+    <div className={styles.svgWrap} ref={wrapRef}>
       <svg
         ref={containerRef}
         width={width}
@@ -187,7 +187,7 @@ function InnerChart({
                 return (
                   <g
                     key={`${scopeKey}-${datum.month}`}
-                    className="chart__bar"
+                    className={styles.bar}
                     style={{ animationDelay: `${monthIndex * 22}ms` }}
                   >
                     <clipPath id={clipId}>
@@ -251,7 +251,7 @@ function InnerChart({
         <TooltipInPortal
           top={tooltipTop}
           left={tooltipLeft}
-          className="chart__tooltip"
+          className={styles.tooltip}
           unstyled
         >
           {(() => {
@@ -259,12 +259,12 @@ function InnerChart({
             const drifted = datum.total !== datum.reported;
             return (
               <>
-                <div className="chart__tooltip-title">{datum.month}</div>
+                <div className={styles.tooltipTitle}>{datum.month}</div>
                 {series.map((s) => (
-                  <div key={s.key} className="chart__tooltip-row">
+                  <div key={s.key} className={styles.tooltipRow}>
                     <span>
                       <span
-                        className="chart__tooltip-swatch"
+                        className={styles.tooltipSwatch}
                         style={{ background: colorScale(s.key) }}
                       />
                       {s.label}
@@ -272,10 +272,10 @@ function InnerChart({
                     <strong>{(datum[s.key] as number).toLocaleString()}</strong>
                   </div>
                 ))}
-                <div className="chart__tooltip-meta">
+                <div className={styles.tooltipMeta}>
                   Total {datum.total.toLocaleString()}
                   {drifted && (
-                    <span className="chart__tooltip-drift">
+                    <span className={styles.tooltipDrift}>
                       reported {datum.reported.toLocaleString()}
                     </span>
                   )}
@@ -313,12 +313,12 @@ export function ClientsChart({ stack, scopeLabel }: ClientsChartProps) {
   const captionId = useId();
 
   return (
-    <figure className="chart" aria-labelledby={captionId}>
+    <figure className={styles.chart} aria-labelledby={captionId}>
       <figcaption className="visually-hidden">
         Stacked bar chart of monthly client counts for {scopeLabel}, split by
         the level directly beneath it. The same figures are in the table below.
       </figcaption>
-      <div className="chart__plot" style={{ height: HEIGHT }} ref={plotRef}>
+      <div className={styles.plot} style={{ height: HEIGHT }} ref={plotRef}>
         {width > 0 && (
           <InnerChart stack={stack} width={width} height={HEIGHT} />
         )}

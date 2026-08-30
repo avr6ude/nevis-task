@@ -12,7 +12,7 @@ import {
 } from "react";
 import { Button } from "react-aria-components";
 import type { ClientNode } from "@/types";
-import "./ClientsTable.css";
+import styles from "./ClientsTable.module.css";
 
 export interface ClientsTableProps {
   root: ClientNode;
@@ -26,7 +26,7 @@ function MonthHeader() {
   return (
     <thead>
       <tr role="row">
-        <th role="columnheader" scope="col" className="clients-table__name-col">
+        <th role="columnheader" scope="col" className={styles.nameCol}>
           Name
         </th>
         {MONTHS.map((month) => (
@@ -43,16 +43,16 @@ export function ClientsTableShell({ children }: { children: ReactNode }) {
   return (
     <>
       <div
-        className="clients-table-container"
+        className={styles.container}
         tabIndex={0}
         role="group"
         aria-label="Month columns"
       >
-        <table className="clients-table">
+        <table className={styles.table}>
           <MonthHeader />
         </table>
       </div>
-      <div className="clients-table__slot">{children}</div>
+      <div className={styles.slot}>{children}</div>
     </>
   );
 }
@@ -226,11 +226,11 @@ export function ClientsTable({
   }, [rows, active.rowId, root.id]);
 
   return (
-    <div className="clients-table-container">
+    <div className={styles.container}>
       <table
         role="treegrid"
         aria-label="Clients by company, branch, adviser and acquisition channel"
-        className="clients-table"
+        className={styles.table}
       >
         <MonthHeader />
 
@@ -260,22 +260,21 @@ export function ClientsTable({
                   moveTo(node.id, null);
                 }}
                 onKeyDown={(event) => handleKeyDown(event, row, index)}
-                className={[
-                  "clients-table__row",
-                  hasChildren && "clients-table__row--interactive",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                className={
+                  hasChildren
+                    ? `${styles.row} ${styles.interactive}`
+                    : styles.row
+                }
               >
                 <td
                   ref={(el) => setCellRef(cellKey(node.id, 0), el)}
                   role="gridcell"
                   tabIndex={isActiveRow && active.column === 0 ? 0 : -1}
                   onFocus={() => setActive({ rowId: node.id, column: 0 })}
-                  className="clients-table__name-col"
+                  className={styles.nameCol}
                 >
                   <div
-                    className="clients-table__cell"
+                    className={styles.cell}
                     style={{ paddingLeft: `${(level - 1) * 28}px` }}
                   >
                     {hasChildren ? (
@@ -283,7 +282,7 @@ export function ClientsTable({
                         slot={null}
                         excludeFromTabOrder
                         aria-label={expanded ? "Collapse" : "Expand"}
-                        className="clients-table__expand-btn"
+                        className={styles.expandBtn}
                         onPress={() => {
                           onToggle(node.id);
                           moveTo(node.id, null);
@@ -292,19 +291,19 @@ export function ClientsTable({
                         <ChevronRight
                           className={
                             expanded
-                              ? "clients-table__chevron clients-table__chevron--open"
-                              : "clients-table__chevron"
+                              ? `${styles.chevron} ${styles.chevronOpen}`
+                              : styles.chevron
                           }
                         />
                       </Button>
                     ) : (
                       <span
-                        className="clients-table__expand-placeholder"
+                        className={styles.expandPlaceholder}
                         aria-hidden="true"
                       />
                     )}
                     {node.image && <Avatar name={node.name} src={node.image} />}
-                    <span className="clients-table__name">{node.name}</span>
+                    <span className={styles.name}>{node.name}</span>
                   </div>
                 </td>
 
@@ -319,7 +318,7 @@ export function ClientsTable({
                         isActiveRow && active.column === column ? 0 : -1
                       }
                       onFocus={() => setActive({ rowId: node.id, column })}
-                      className="clients-table__value"
+                      className={styles.value}
                     >
                       {node.values[monthIndex]?.toLocaleString() ?? "—"}
                     </td>

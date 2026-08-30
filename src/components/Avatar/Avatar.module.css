@@ -10,14 +10,14 @@
   overflow: hidden;
 }
 
-.avatar__initials {
+.initials {
   font-size: 8px;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: rgba(20, 20, 19, 0.7);
 }
 
-.avatar__photo {
+.photo {
   position: absolute;
   inset: 0;
   width: 100%;

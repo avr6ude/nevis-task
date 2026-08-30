@@ -1,4 +1,4 @@
-.chart-legend {
+.legend {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -10,13 +10,13 @@
   color: var(--color-ink-secondary);
 }
 
-.chart-legend__item {
+.item {
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
-.chart-legend__swatch {
+.swatch {
   width: 8px;
   height: 8px;
   border-radius: 2px;

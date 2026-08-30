@@ -1,5 +1,5 @@
 import type { StackSeries } from "@domain/childStack";
-import "./Legend.css";
+import styles from "./Legend.module.css";
 
 export interface LegendProps {
   series: StackSeries[];
@@ -8,11 +8,11 @@ export interface LegendProps {
 
 export function Legend({ series, palette }: LegendProps) {
   return (
-    <ul className="chart-legend">
+    <ul className={styles.legend}>
       {series.map((entry, i) => (
-        <li key={entry.key} className="chart-legend__item">
+        <li key={entry.key} className={styles.item}>
           <span
-            className="chart-legend__swatch"
+            className={styles.swatch}
             style={{ background: palette[i % palette.length] }}
             aria-hidden="true"
           />

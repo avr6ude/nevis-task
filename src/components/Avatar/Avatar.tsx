@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Avatar.css";
+import styles from "./Avatar.module.css";
 
 export interface AvatarProps {
   name: string;
@@ -35,11 +35,15 @@ export function Avatar({ name, src }: AvatarProps) {
   const bg = PALETTE[hashIndex(name, PALETTE.length)];
 
   return (
-    <span className="avatar" style={{ background: bg }} aria-hidden="true">
-      <span className="avatar__initials">{initials(name)}</span>
+    <span
+      className={styles.avatar}
+      style={{ background: bg }}
+      aria-hidden="true"
+    >
+      <span className={styles.initials}>{initials(name)}</span>
       {src && failedSrc !== src && (
         <img
-          className="avatar__photo"
+          className={styles.photo}
           src={src}
           alt=""
           onError={() => setFailedSrc(src)}
