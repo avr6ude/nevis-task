@@ -358,3 +358,28 @@ function ChartDataTable({ stack, scopeLabel }: ClientsChartProps) {
     </table>
   );
 }
+
+const SKELETON_BARS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94].map(
+  (height, id) => ({ id, height }),
+);
+
+export function ChartSkeleton() {
+  return (
+    <div className={styles.skeletonBars} aria-hidden="true">
+      {SKELETON_BARS.map(({ id, height }) => (
+        <span
+          key={id}
+          className={styles.skeletonBar}
+          style={{
+            height: `${height}%`,
+            animationDelay: `${id * 60}ms`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+export function EmptyChart({ message }: { message: string }) {
+  return <p className={styles.empty}>{message}</p>;
+}

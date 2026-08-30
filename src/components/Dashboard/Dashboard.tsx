@@ -1,13 +1,16 @@
 import { useClients } from "@api/useClients";
-import { ClientsChart } from "@components/ClientsChart/ClientsChart";
+import {
+  ChartSkeleton,
+  ClientsChart,
+  EmptyChart,
+} from "@components/ClientsChart/ClientsChart";
 import {
   ClientsTable,
   ClientsTableShell,
+  TableSkeleton,
 } from "@components/ClientsTable/ClientsTable";
 import { DataError } from "@components/states/DataError";
-import { EmptyChart } from "@components/states/EmptyChart";
 import { ErrorBoundary } from "@components/states/ErrorBoundary";
-import { ChartSkeleton, TableSkeleton } from "@components/states/Skeletons";
 import { toChildStack } from "@domain/childStack";
 import { deepestExpanded, pathTo } from "@domain/clients";
 import { useExpandedRows } from "@hooks/useExpandedRows";

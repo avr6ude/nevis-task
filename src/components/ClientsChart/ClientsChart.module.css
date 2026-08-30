@@ -77,3 +77,34 @@
     transform: scaleY(1);
   }
 }
+
+.empty {
+  margin: 0;
+  color: var(--color-ink-secondary);
+}
+
+.skeletonBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  height: 312px;
+  padding-left: 36px;
+}
+
+.skeletonBar {
+  flex: 1 1 0;
+  border-radius: 6px;
+  background: var(--color-line);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}

@@ -319,3 +319,27 @@ export function ClientsTable({
     </div>
   );
 }
+
+const SKELETON_ROWS = [0, 1, 2, 3];
+const SKELETON_CELLS = [0, 1, 2, 3, 4, 5];
+
+export function TableSkeleton() {
+  return (
+    <div className={styles.skeletonRows} aria-hidden="true">
+      {SKELETON_ROWS.map((row) => (
+        <div key={row} className={styles.skeletonRow}>
+          <span
+            className={`${styles.skeletonLine} ${styles.skeletonName}`}
+            style={{ marginLeft: row === 0 ? 0 : 28 }}
+          />
+          {SKELETON_CELLS.map((cell) => (
+            <span
+              key={cell}
+              className={`${styles.skeletonLine} ${styles.skeletonValue}`}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
