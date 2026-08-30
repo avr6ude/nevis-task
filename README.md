@@ -14,7 +14,7 @@ npm run dev
 ```
 
 Client on http://localhost:5173, API on http://localhost:8787, Vite proxies
-`/api`. `npm test` runs 50 tests, including axe against the table and chart.
+`/api`. `npm test` runs the tests, including axe against the table and chart.
 
 ## Data
 
@@ -68,6 +68,7 @@ narrow layout have no reference to match.
 
 - Virtualise the table with react-window and load subtrees on demand.
 - Keep the expanded rows in the URL so a drilled-in view can be shared.
+- Run type-check, lint and tests in CI so a regression cannot land unnoticed.
 - Let the user pick the period. The months already come from the API, so a date
   range is a control and a query param, not a rewrite.
 - Show change as well as level. The brief is about how a book develops over
