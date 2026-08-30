@@ -20,6 +20,8 @@ export interface ClientsTableProps {
   onToggle: (id: string) => void;
 }
 
+const CELL_COUNT = MONTHS.length + 1;
+
 function MonthHeader() {
   return (
     <thead>
@@ -37,10 +39,6 @@ function MonthHeader() {
   );
 }
 
-/**
- * The table shell with its month columns but no rows. Keeps the page from
- * collapsing while the data is loading or after it failed.
- */
 export function ClientsTableShell({ children }: { children: ReactNode }) {
   return (
     <>
@@ -81,9 +79,7 @@ function flattenNodes(
     expanded,
   };
 
-  if (!expanded) {
-    return [row];
-  }
+  if (!expanded) return [row];
 
   return [
     row,
@@ -93,18 +89,29 @@ function flattenNodes(
 
 function findParentIndex(rows: FlatRow[], index: number): number | null {
   const current = rows[index];
-
-  if (!current || current.level === 1) {
-    return null;
-  }
+  if (!current || current.level === 1) return null;
 
   for (let i = index - 1; i >= 0; i--) {
-    if (rows[i].level === current.level - 1) {
-      return i;
-    }
+    if (rows[i].level === current.level - 1) return i;
   }
-
   return null;
+}
+
+/** `column` is null when the row itself holds focus, per the treegrid pattern. */
+interface Active {
+  rowId: string;
+  column: number | null;
+}
+
+const cellKey = (rowId: string, column: number | null) =>
+  column === null ? rowId : `${rowId}:${column}`;
+
+/** Read the focused column off the event target so it never lags a render. */
+function columnOf(target: EventTarget | null): number | null {
+  const el = target as HTMLElement | null;
+  if (el?.tagName !== "TD") return null;
+  const parent = el.parentElement;
+  return parent ? Array.prototype.indexOf.call(parent.children, el) : null;
 }
 
 export function ClientsTable({
@@ -112,93 +119,98 @@ export function ClientsTable({
   expandedIds,
   onToggle,
 }: ClientsTableProps) {
-  const [focusedId, setFocusedId] = useState(root.id);
-  const rowRefs = useRef(new Map<string, HTMLTableRowElement>());
+  const [active, setActive] = useState<Active>({
+    rowId: root.id,
+    column: null,
+  });
+  const cellRefs = useRef(new Map<string, HTMLElement>());
 
   const rows = useMemo(
     () => flattenNodes(root, expandedIds),
     [root, expandedIds],
   );
 
-  const setRowRef = useCallback(
-    (id: string, element: HTMLTableRowElement | null) => {
-      if (element) {
-        rowRefs.current.set(id, element);
-      } else {
-        rowRefs.current.delete(id);
-      }
-    },
-    [],
-  );
+  const setCellRef = useCallback((key: string, el: HTMLElement | null) => {
+    if (el) cellRefs.current.set(key, el);
+    else cellRefs.current.delete(key);
+  }, []);
 
-  const focusRow = useCallback((id: string) => {
-    setFocusedId(id);
-    requestAnimationFrame(() => {
-      rowRefs.current.get(id)?.focus();
-    });
+  const moveTo = useCallback((rowId: string, column: number | null) => {
+    setActive({ rowId, column });
+    cellRefs.current.get(cellKey(rowId, column))?.focus();
   }, []);
 
   const handleKeyDown = (
-    event: KeyboardEvent<HTMLTableRowElement>,
+    event: KeyboardEvent<HTMLElement>,
     row: FlatRow,
     index: number,
   ) => {
+    const { node, hasChildren, expanded } = row;
+    const column = columnOf(event.target);
+    const onCell = column !== null;
+
     switch (event.key) {
-      case "ArrowDown": {
-        event.preventDefault();
-        const next = rows[index + 1];
-        if (next) focusRow(next.node.id);
-        break;
-      }
-
-      case "ArrowUp": {
-        event.preventDefault();
-        const previous = rows[index - 1];
-        if (previous) focusRow(previous.node.id);
-        break;
-      }
-
       case "ArrowRight": {
         event.preventDefault();
-        if (row.hasChildren && !row.expanded) {
-          onToggle(row.node.id);
-        } else if (row.hasChildren && row.expanded) {
-          const child = rows[index + 1];
-          if (child?.level === row.level + 1) focusRow(child.node.id);
+        if (!onCell) {
+          if (hasChildren && !expanded) onToggle(node.id);
+          else moveTo(node.id, 0);
+        } else if (column < CELL_COUNT - 1) {
+          moveTo(node.id, column + 1);
         }
         break;
       }
 
       case "ArrowLeft": {
         event.preventDefault();
-        if (row.hasChildren && row.expanded) {
-          onToggle(row.node.id);
+        if (onCell) {
+          moveTo(node.id, column === 0 ? null : column - 1);
+        } else if (hasChildren && expanded) {
+          onToggle(node.id);
         } else {
-          const parentIndex = findParentIndex(rows, index);
-          if (parentIndex !== null) focusRow(rows[parentIndex].node.id);
+          const parent = findParentIndex(rows, index);
+          if (parent !== null) moveTo(rows[parent].node.id, null);
+        }
+        break;
+      }
+
+      case "ArrowDown": {
+        event.preventDefault();
+        const next = rows[index + 1];
+        if (next) moveTo(next.node.id, column);
+        break;
+      }
+
+      case "ArrowUp": {
+        event.preventDefault();
+        const previous = rows[index - 1];
+        if (previous) moveTo(previous.node.id, column);
+        break;
+      }
+
+      case "Home": {
+        event.preventDefault();
+        if (onCell && !event.ctrlKey) moveTo(node.id, 0);
+        else if (rows[0]) moveTo(rows[0].node.id, column);
+        break;
+      }
+
+      case "End": {
+        event.preventDefault();
+        if (onCell && !event.ctrlKey) moveTo(node.id, CELL_COUNT - 1);
+        else {
+          const last = rows[rows.length - 1];
+          if (last) moveTo(last.node.id, column);
         }
         break;
       }
 
       case "Enter":
       case " ": {
-        if (row.hasChildren) {
+        if (hasChildren) {
           event.preventDefault();
-          onToggle(row.node.id);
+          onToggle(node.id);
         }
-        break;
-      }
-
-      case "Home": {
-        event.preventDefault();
-        if (rows[0]) focusRow(rows[0].node.id);
-        break;
-      }
-
-      case "End": {
-        event.preventDefault();
-        const last = rows[rows.length - 1];
-        if (last) focusRow(last.node.id);
         break;
       }
 
@@ -208,18 +220,13 @@ export function ClientsTable({
   };
 
   useEffect(() => {
-    if (!rows.some((row) => row.node.id === focusedId)) {
-      setFocusedId(rows[0]?.node.id ?? root.id);
+    if (!rows.some((row) => row.node.id === active.rowId)) {
+      setActive({ rowId: rows[0]?.node.id ?? root.id, column: null });
     }
-  }, [rows, focusedId, root.id]);
+  }, [rows, active.rowId, root.id]);
 
   return (
-    <div
-      className="clients-table-container"
-      tabIndex={0}
-      role="group"
-      aria-label="Client table, scrolls horizontally"
-    >
+    <div className="clients-table-container">
       <table
         role="treegrid"
         aria-label="Clients by company, branch, adviser and acquisition channel"
@@ -230,21 +237,27 @@ export function ClientsTable({
         <tbody>
           {rows.map((row, index) => {
             const { node, level, hasChildren, expanded } = row;
-            const isFocused = focusedId === node.id;
+            const isActiveRow = active.rowId === node.id;
+            const rowFocusable = isActiveRow && active.column === null;
 
             return (
               <tr
                 key={node.id}
-                ref={(element) => setRowRef(node.id, element)}
+                ref={(el) => setCellRef(cellKey(node.id, null), el)}
                 role="row"
-                tabIndex={isFocused ? 0 : -1}
+                tabIndex={rowFocusable ? 0 : -1}
                 aria-level={level}
                 aria-expanded={hasChildren ? expanded : undefined}
-                onFocus={() => setFocusedId(node.id)}
-                onClick={() => {
+                onFocus={(event) => {
+                  if (event.target === event.currentTarget) {
+                    setActive({ rowId: node.id, column: null });
+                  }
+                }}
+                onClick={(event) => {
                   if (!hasChildren) return;
+                  if ((event.target as HTMLElement).closest("button")) return;
                   onToggle(node.id);
-                  focusRow(node.id);
+                  moveTo(node.id, null);
                 }}
                 onKeyDown={(event) => handleKeyDown(event, row, index)}
                 className={[
@@ -254,7 +267,13 @@ export function ClientsTable({
                   .filter(Boolean)
                   .join(" ")}
               >
-                <td role="gridcell" className="clients-table__name-col">
+                <td
+                  ref={(el) => setCellRef(cellKey(node.id, 0), el)}
+                  role="gridcell"
+                  tabIndex={isActiveRow && active.column === 0 ? 0 : -1}
+                  onFocus={() => setActive({ rowId: node.id, column: 0 })}
+                  className="clients-table__name-col"
+                >
                   <div
                     className="clients-table__cell"
                     style={{ paddingLeft: `${(level - 1) * 28}px` }}
@@ -267,7 +286,7 @@ export function ClientsTable({
                         className="clients-table__expand-btn"
                         onPress={() => {
                           onToggle(node.id);
-                          focusRow(node.id);
+                          moveTo(node.id, null);
                         }}
                       >
                         <ChevronRight
@@ -289,15 +308,23 @@ export function ClientsTable({
                   </div>
                 </td>
 
-                {MONTHS.map((month, monthIndex) => (
-                  <td
-                    role="gridcell"
-                    key={month}
-                    className="clients-table__value"
-                  >
-                    {node.values[monthIndex]?.toLocaleString() ?? "—"}
-                  </td>
-                ))}
+                {MONTHS.map((month, monthIndex) => {
+                  const column = monthIndex + 1;
+                  return (
+                    <td
+                      key={month}
+                      ref={(el) => setCellRef(cellKey(node.id, column), el)}
+                      role="gridcell"
+                      tabIndex={
+                        isActiveRow && active.column === column ? 0 : -1
+                      }
+                      onFocus={() => setActive({ rowId: node.id, column })}
+                      className="clients-table__value"
+                    >
+                      {node.values[monthIndex]?.toLocaleString() ?? "—"}
+                    </td>
+                  );
+                })}
               </tr>
             );
           })}

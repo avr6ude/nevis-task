@@ -50,8 +50,7 @@
           "a11y": {
             "noNoninteractiveElementToInteractiveRole": "off",
             "noNoninteractiveTabindex": "off",
-            "noRedundantRoles": "off",
-            "useFocusableInteractive": "off"
+            "noRedundantRoles": "off"
           }
         }
       }

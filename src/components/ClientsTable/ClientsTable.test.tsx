@@ -112,6 +112,56 @@ describe("ClientsTable expand and collapse", () => {
     });
   });
 
+  it("moves into the cells and along them with the arrow keys", async () => {
+    const user = userEvent.setup();
+    const cells = (rowName: RegExp) =>
+      within(row(rowName)).getAllByRole("gridcell");
+
+    row(/Company/).focus();
+    await user.keyboard("{ArrowRight}");
+    expect(cells(/Company/)[0]).toHaveFocus();
+
+    await user.keyboard("{ArrowRight}");
+    expect(cells(/Company/)[1]).toHaveFocus();
+
+    await user.keyboard("{End}");
+    expect(cells(/Company/)[12]).toHaveFocus();
+
+    await user.keyboard("{Home}");
+    expect(cells(/Company/)[0]).toHaveFocus();
+
+    await user.keyboard("{ArrowLeft}");
+    expect(row(/Company/)).toHaveFocus();
+  });
+
+  it("keeps the column when moving between rows", async () => {
+    const user = userEvent.setup();
+    const cells = (rowName: RegExp) =>
+      within(row(rowName)).getAllByRole("gridcell");
+
+    row(/Company/).focus();
+    await user.keyboard("{ArrowRight}{ArrowRight}{ArrowRight}");
+    expect(cells(/Company/)[2]).toHaveFocus();
+
+    await user.keyboard("{ArrowDown}");
+    expect(cells(/Branch 1/)[2]).toHaveFocus();
+
+    await user.keyboard("{ArrowUp}");
+    expect(cells(/Company/)[2]).toHaveFocus();
+  });
+
+  it("expands a collapsed row before entering its cells", async () => {
+    const user = userEvent.setup();
+    row(/Branch 1/).focus();
+
+    await user.keyboard("{ArrowRight}");
+    expect(row(/Branch 1/)).toHaveAttribute("aria-expanded", "true");
+    expect(row(/Branch 1/)).toHaveFocus();
+
+    await user.keyboard("{ArrowRight}");
+    expect(within(row(/Branch 1/)).getAllByRole("gridcell")[0]).toHaveFocus();
+  });
+
   it("gives no expand control to a node without children", async () => {
     const user = userEvent.setup();
     await user.click(toggle(/Branch 1/, "Expand"));
