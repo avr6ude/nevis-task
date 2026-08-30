@@ -3,7 +3,7 @@ import useSWR from "swr";
 import type { ClientsData } from "@/types";
 import { fetchClients } from "./client";
 
-export const CLIENTS_KEY = "/api/clients";
+const CLIENTS_KEY = "/api/clients";
 
 export type ClientsState =
   | { status: "loading"; data?: undefined; error?: undefined }
