@@ -1,6 +1,6 @@
-import type { ClientNode } from "@/types";
+import { type ClientNode, clientNodeSchema } from "@domain/schema";
 
-export type ApiErrorKind = "offline" | "failed";
+export type ApiErrorKind = "offline" | "failed" | "invalid";
 
 export class ApiError extends Error {
   kind: ApiErrorKind;
@@ -21,7 +21,7 @@ function debugQuery(): string {
 
   const current = new URLSearchParams(window.location.search);
   const forwarded = new URLSearchParams();
-  for (const key of ["fail", "delay"]) {
+  for (const key of ["fail", "delay", "bad"]) {
     const value = current.get(key);
     if (value !== null) forwarded.set(key, value);
   }
@@ -42,9 +42,17 @@ export async function fetchClients(): Promise<ClientNode> {
     throw new ApiError("failed", res.status);
   }
 
+  let body: unknown;
   try {
-    return (await res.json()) as ClientNode;
+    body = await res.json();
   } catch {
     throw new ApiError("failed");
   }
+
+  const parsed = clientNodeSchema.safeParse(body);
+  if (!parsed.success) {
+    throw new ApiError("invalid");
+  }
+
+  return parsed.data;
 }

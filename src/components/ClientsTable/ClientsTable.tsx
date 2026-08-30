@@ -1,6 +1,7 @@
 import { Avatar } from "@components/Avatar/Avatar";
 import { ChevronRight } from "@components/icons/ChevronRight";
-import { getChildren, MONTHS } from "@domain/clients";
+import { getChildren } from "@domain/clients";
+import { MONTHS } from "@domain/schema";
 import {
   type KeyboardEvent,
   type ReactNode,

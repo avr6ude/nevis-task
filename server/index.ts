@@ -1,13 +1,25 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import express from "express";
+import { z } from "zod";
+import { clientNodeSchema } from "../src/domain/schema.js";
 
 const dataPath = fileURLToPath(
   new URL("../src/data/company.json", import.meta.url),
 );
 const avatarsDir = fileURLToPath(new URL("./avatars/", import.meta.url));
 
-const company: unknown = JSON.parse(readFileSync(dataPath, "utf-8"));
+const parsed = clientNodeSchema.safeParse(
+  JSON.parse(readFileSync(dataPath, "utf-8")),
+);
+
+if (!parsed.success) {
+  console.error("company.json does not match the client schema:");
+  console.error(z.prettifyError(parsed.error));
+  process.exit(1);
+}
+
+const company = parsed.data;
 
 const app = express();
 
@@ -32,6 +44,11 @@ app.get("/api/clients", async (req, res) => {
 
   if (Number.isInteger(status) && status >= 400 && status <= 599) {
     res.status(status).json({ error: "Failed to load client data." });
+    return;
+  }
+
+  if (req.query.bad === "1") {
+    res.json({ id: "broken", name: "Company", values: [1, 2, 3] });
     return;
   }
 

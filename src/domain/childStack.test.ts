@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
 import type { ClientNode } from "@/types";
 import { toChildStack } from "./childStack";
-import { deepestExpanded, findNode, MONTHS } from "./clients";
+import { deepestExpanded, findNode } from "./clients";
+import { MONTHS } from "./schema";
 
 const company = companyData as ClientNode;
 

@@ -23,9 +23,12 @@ Tests cover the two things the brief names: how the data maps into the chart
 keyboard (`src/components/ClientsTable/ClientsTable.test.tsx`).
 
 `GET /api/clients` returns the dataset, photos come from
-`GET /api/avatars/:file`. The client forwards two query params from its own URL
-so the states can be checked by hand: `/?delay=6000` for loading, `/?fail=1` for
-the error. Running without the API (`npm run dev:web`) also errors.
+`GET /api/avatars/:file`. Both ends validate against one Zod schema
+(`src/domain/schema.ts`): the server refuses to boot on bad data, the client
+rejects a response that does not match. The client forwards three query params
+from its own URL so the states can be checked by hand: `/?delay=6000` for
+loading, `/?fail=1` for the error, `/?bad=1` for a malformed payload. Running
+without the API (`npm run dev:web`) also errors.
 
 ## Assumptions
 

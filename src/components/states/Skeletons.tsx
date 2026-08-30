@@ -1,4 +1,4 @@
-import { MONTHS } from "@domain/clients";
+import { MONTHS } from "@domain/schema";
 import styles from "./Skeletons.module.css";
 
 const BAR_HEIGHTS = [62, 68, 74, 80, 86, 92, 100, 66, 66, 66, 66, 94];

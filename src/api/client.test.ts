@@ -52,6 +52,38 @@ describe("fetchClients", () => {
     await expect(fetchClients()).rejects.toMatchObject({ kind: "failed" });
   });
 
+  it("rejects a well-formed response that does not match the schema", async () => {
+    stubFetch(
+      async () =>
+        new Response(
+          JSON.stringify({ id: "x", name: "Company", values: [1] }),
+          {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          },
+        ),
+    );
+
+    await expect(fetchClients()).rejects.toMatchObject({ kind: "invalid" });
+  });
+
+  it("rejects a node nested deep in the tree that is malformed", async () => {
+    const broken = structuredClone(companyData) as Record<string, unknown>;
+    const branches = broken.branches as Record<string, unknown>[];
+    const employees = branches[0].employees as Record<string, unknown>[];
+    employees[0].values = [1, 2, 3];
+
+    stubFetch(
+      async () =>
+        new Response(JSON.stringify(broken), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        }),
+    );
+
+    await expect(fetchClients()).rejects.toMatchObject({ kind: "invalid" });
+  });
+
   it("forwards the fail and delay params from the page url", async () => {
     const spy = stubFetch(async () => ok());
     window.history.replaceState({}, "", "/?fail=1&delay=200&other=x");

@@ -1,5 +1,6 @@
 import type { ClientNode } from "@/types";
-import { getChildren, MONTHS } from "./clients";
+import { getChildren } from "./clients";
+import { MONTHS } from "./schema";
 
 export interface StackSeries {
   key: string;
