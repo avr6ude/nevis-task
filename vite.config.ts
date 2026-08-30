@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
-const API_PORT = process.env.PORT ?? "8787";
+const API_PORT = process.env.API_PORT ?? "8787";
 
 const resolve = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 

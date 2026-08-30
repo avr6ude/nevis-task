@@ -23,7 +23,7 @@ const company = parsed.data;
 
 const app = express();
 
-const PORT = Number(process.env.PORT ?? 8787);
+const PORT = Number(process.env.API_PORT ?? 8787);
 const DELAY_MS = Number(process.env.DELAY_MS ?? 500);
 const FAIL_RATE = Number(process.env.FAIL_RATE ?? 0);
 
