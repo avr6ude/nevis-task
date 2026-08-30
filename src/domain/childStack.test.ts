@@ -2,9 +2,18 @@ import { describe, expect, it } from "vitest";
 import companyData from "@/data/company.json";
 import type { ClientNode, ClientsData } from "@/types";
 import { toChildStack } from "./childStack";
-import { deepestExpanded, findNode, getChildren, rollUp } from "./clients";
+import { deepestExpanded, getChildren, rollUp } from "./clients";
 
 const { months: MONTHS, root: company } = companyData as ClientsData;
+
+function findNode(root: ClientNode, id: string): ClientNode | undefined {
+  if (root.id === id) return root;
+  for (const child of getChildren(root) ?? []) {
+    const hit = findNode(child, id);
+    if (hit) return hit;
+  }
+  return undefined;
+}
 
 function node(id: string): ClientNode {
   const found = findNode(company, id);

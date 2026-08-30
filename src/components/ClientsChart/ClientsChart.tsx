@@ -1,11 +1,12 @@
 import type { ChildStack, StackDatum } from "@domain/childStack";
+import { useElementWidth } from "@hooks/useElementWidth";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { GridRows } from "@visx/grid";
 import { Group } from "@visx/group";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { BarStack } from "@visx/shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef } from "react";
 import styles from "./ClientsChart.module.css";
 import { Legend } from "./Legend";
 
@@ -281,25 +282,6 @@ function InnerChart({
       )}
     </div>
   );
-}
-
-function useElementWidth() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const measure = () => setWidth(el.clientWidth);
-    measure();
-
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return [ref, width] as const;
 }
 
 export function ClientsChart({ stack, scopeLabel }: ClientsChartProps) {

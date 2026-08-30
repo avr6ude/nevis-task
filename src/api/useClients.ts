@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import useSWR from "swr";
 import type { ClientsData } from "@/types";
 import { fetchClients } from "./client";
@@ -17,9 +16,9 @@ export function useClients(): ClientsState & { refetch: () => void } {
     { shouldRetryOnError: false },
   );
 
-  const refetch = useCallback(() => {
+  const refetch = () => {
     void mutate();
-  }, [mutate]);
+  };
 
   if (data !== undefined) return { status: "ok", data, refetch };
   if (error) return { status: "error", error, refetch };

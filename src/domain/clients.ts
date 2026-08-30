@@ -4,15 +4,6 @@ export function getChildren(node: ClientNode): ClientNode[] | undefined {
   return node.branches ?? node.employees ?? node.channels;
 }
 
-export function findNode(root: ClientNode, id: string): ClientNode | undefined {
-  if (root.id === id) return root;
-  for (const child of getChildren(root) ?? []) {
-    const hit = findNode(child, id);
-    if (hit) return hit;
-  }
-  return undefined;
-}
-
 export function deepestExpanded(
   root: ClientNode,
   expandedIds: Set<string>,

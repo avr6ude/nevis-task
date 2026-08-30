@@ -9,7 +9,6 @@
   "scripts": {
     "css:types": "hcm 'src/**/*.module.css' --localsConvention camelCaseOnly --no-declarationMap --arbitraryExtensions",
     "dev": "concurrently -k -n web,api -c cyan,magenta \"vite\" \"npm:dev:api\"",
-    "dev:web": "vite",
     "dev:api": "tsx watch server/index.ts",
     "build": "npm run css:types && tsc -b && vite build",
     "lint": "biome check",
