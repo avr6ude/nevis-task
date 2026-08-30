@@ -1,6 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
+import useSWR from "swr";
 import type { ClientNode } from "@/types";
 import { fetchClients } from "./client";
+
+export const CLIENTS_KEY = "/api/clients";
 
 export type ClientsState =
   | { status: "loading"; data?: undefined; error?: undefined }
@@ -8,38 +11,17 @@ export type ClientsState =
   | { status: "error"; data?: undefined; error: Error };
 
 export function useClients(): ClientsState & { refetch: () => void } {
-  const [state, setState] = useState<ClientsState>({ status: "loading" });
-  const reload = useRef<() => void>(() => {});
+  const { data, error, mutate } = useSWR<ClientNode, Error>(
+    CLIENTS_KEY,
+    fetchClients,
+    { shouldRetryOnError: false },
+  );
 
-  useEffect(() => {
-    let controller: AbortController | undefined;
+  const refetch = useCallback(() => {
+    void mutate();
+  }, [mutate]);
 
-    const run = () => {
-      controller?.abort();
-      controller = new AbortController();
-      const { signal } = controller;
-
-      setState({ status: "loading" });
-      fetchClients(signal)
-        .then((data) => {
-          if (!signal.aborted) setState({ status: "ok", data });
-        })
-        .catch((error: unknown) => {
-          if (signal.aborted) return;
-          setState({
-            status: "error",
-            error: error instanceof Error ? error : new Error(String(error)),
-          });
-        });
-    };
-
-    reload.current = run;
-    run();
-
-    return () => controller?.abort();
-  }, []);
-
-  const refetch = useCallback(() => reload.current(), []);
-
-  return { ...state, refetch };
+  if (data !== undefined) return { status: "ok", data, refetch };
+  if (error) return { status: "error", error, refetch };
+  return { status: "loading", refetch };
 }

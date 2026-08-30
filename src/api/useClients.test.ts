@@ -1,4 +1,6 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
+import { createElement, type ReactNode } from "react";
+import { SWRConfig } from "swr";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import companyData from "@/data/company.json";
 import { useClients } from "./useClients";
@@ -11,6 +13,15 @@ const ok = () =>
 
 const failed = () => new Response("nope", { status: 500 });
 
+const wrapper = ({ children }: { children: ReactNode }) =>
+  createElement(
+    SWRConfig,
+    { value: { provider: () => new Map(), dedupingInterval: 0 } },
+    children,
+  );
+
+const renderClients = () => renderHook(() => useClients(), { wrapper });
+
 afterEach(() => vi.unstubAllGlobals());
 
 describe("useClients", () => {
@@ -20,7 +31,7 @@ describe("useClients", () => {
       vi.fn(async () => ok()),
     );
 
-    const { result } = renderHook(() => useClients());
+    const { result } = renderClients();
     expect(result.current.status).toBe("loading");
 
     await waitFor(() => expect(result.current.status).toBe("ok"));
@@ -34,7 +45,7 @@ describe("useClients", () => {
       vi.fn(async () => failed()),
     );
 
-    const { result } = renderHook(() => useClients());
+    const { result } = renderClients();
 
     await waitFor(() => expect(result.current.status).toBe("error"));
     expect(result.current.error).toMatchObject({ kind: "failed" });
@@ -48,7 +59,7 @@ describe("useClients", () => {
       .mockImplementationOnce(async () => ok());
     vi.stubGlobal("fetch", fetchMock);
 
-    const { result } = renderHook(() => useClients());
+    const { result } = renderClients();
     await waitFor(() => expect(result.current.status).toBe("error"));
 
     act(() => result.current.refetch());
@@ -56,5 +67,21 @@ describe("useClients", () => {
     await waitFor(() => expect(result.current.status).toBe("ok"));
     expect(result.current.data).toMatchObject({ name: "Company" });
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not refetch while another component already asked", async () => {
+    const fetchMock = vi.fn(async () => ok());
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { result } = renderHook(
+      () => {
+        useClients();
+        return useClients();
+      },
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.status).toBe("ok"));
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

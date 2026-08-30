@@ -29,13 +29,12 @@ function debugQuery(): string {
   return query ? `?${query}` : "";
 }
 
-export async function fetchClients(signal?: AbortSignal): Promise<ClientNode> {
+export async function fetchClients(): Promise<ClientNode> {
   let res: Response;
 
   try {
-    res = await fetch(`/api/clients${debugQuery()}`, { signal });
-  } catch (error) {
-    if (signal?.aborted) throw error;
+    res = await fetch(`/api/clients${debugQuery()}`);
+  } catch {
     throw new ApiError("offline");
   }
 
