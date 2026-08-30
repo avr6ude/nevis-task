@@ -52,10 +52,13 @@ the error, `/?bad=1` for a malformed payload. Running without the API
   "Placeholder" in white on white.
 - **Expand controls appear only where they do something.** The design puts a
   chevron on every adviser, but four of the five have no channels.
-- **The table wrapper is focusable.** It scrolls sideways, and focusing a row
-  does not scroll it, so without this a keyboard user cannot reach the later
-  months. Biome's `noNoninteractiveTabindex` is turned off for that folder in
-  `biome.json` because it and axe disagree here.
+- **The table is a full treegrid, which is more than the brief asks for.** The
+  brief needs expand and collapse from the keyboard and the hierarchy exposed to
+  assistive tech. On top of that, every month is its own grid cell you can walk
+  into with Left and Right, so a keyboard user can reach the later months without
+  a mouse. React Aria's `Tree` covers the hierarchy but puts a whole row inside
+  one cell, so the months would not be reachable one by one. That is why the
+  keyboard handling is written by hand instead.
 
 ## What I think you got wrong
 
