@@ -37,7 +37,7 @@ export function Dashboard() {
             {clients.status === "loading" ? (
               <ChartSkeleton />
             ) : (
-              <ChartUnavailable />
+              <ChartUnavailable message="No chart to show while the data is unavailable." />
             )}
           </div>
         </section>

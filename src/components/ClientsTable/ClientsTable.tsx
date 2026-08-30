@@ -20,8 +20,6 @@ export interface ClientsTableProps {
   onToggle: (id: string) => void;
 }
 
-const ADVISER_LEVEL = 3;
-
 function MonthHeader() {
   return (
     <thead>
@@ -265,11 +263,7 @@ export function ClientsTable({
                       <Button
                         slot={null}
                         excludeFromTabOrder
-                        aria-label={
-                          expanded
-                            ? `Collapse ${node.name}`
-                            : `Expand ${node.name}`
-                        }
+                        aria-label={expanded ? "Collapse" : "Expand"}
                         className="clients-table__expand-btn"
                         onPress={() => {
                           onToggle(node.id);
@@ -290,9 +284,7 @@ export function ClientsTable({
                         aria-hidden="true"
                       />
                     )}
-                    {level === ADVISER_LEVEL && (
-                      <Avatar name={node.name} src={node.image} />
-                    )}
+                    {node.image && <Avatar name={node.name} src={node.image} />}
                     <span className="clients-table__name">{node.name}</span>
                   </div>
                 </td>

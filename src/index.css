@@ -107,3 +107,9 @@ button {
     transition-duration: 0.001ms !important;
   }
 }
+
+@media (max-width: 480px) {
+  :root {
+    --name-col: 180px;
+  }
+}

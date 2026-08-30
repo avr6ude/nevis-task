@@ -17,6 +17,8 @@ export class ApiError extends Error {
 }
 
 function debugQuery(): string {
+  if (!import.meta.env.DEV) return "";
+
   const current = new URLSearchParams(window.location.search);
   const forwarded = new URLSearchParams();
   for (const key of ["fail", "delay"]) {

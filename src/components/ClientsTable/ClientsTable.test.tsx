@@ -17,6 +17,8 @@ function Harness() {
 
 const row = (name: string | RegExp) => screen.getByRole("row", { name });
 const queryRow = (name: string | RegExp) => screen.queryByRole("row", { name });
+const toggle = (rowName: string | RegExp, label: "Expand" | "Collapse") =>
+  within(row(rowName)).getByRole("button", { name: label });
 
 describe("ClientsTable expand and collapse", () => {
   beforeEach(() => {
@@ -32,13 +34,13 @@ describe("ClientsTable expand and collapse", () => {
   it("reveals and hides the level beneath when the control is clicked", async () => {
     const user = userEvent.setup();
 
-    await user.click(screen.getByRole("button", { name: "Expand Branch 1" }));
+    await user.click(toggle(/Branch 1/, "Expand"));
 
     expect(row(/Branch 1/)).toHaveAttribute("aria-expanded", "true");
     expect(row(/Anna Blackwood/)).toBeInTheDocument();
     expect(row(/Sarah Smith/)).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Collapse Branch 1" }));
+    await user.click(toggle(/Branch 1/, "Collapse"));
 
     expect(row(/Branch 1/)).toHaveAttribute("aria-expanded", "false");
     expect(queryRow(/Anna Blackwood/)).not.toBeInTheDocument();
@@ -112,7 +114,7 @@ describe("ClientsTable expand and collapse", () => {
 
   it("gives no expand control to a node without children", async () => {
     const user = userEvent.setup();
-    await user.click(screen.getByRole("button", { name: "Expand Branch 1" }));
+    await user.click(toggle(/Branch 1/, "Expand"));
 
     expect(row(/James Walker/)).not.toHaveAttribute("aria-expanded");
     expect(
@@ -125,10 +127,8 @@ describe("ClientsTable expand and collapse", () => {
 
   it("nests each level one step deeper", async () => {
     const user = userEvent.setup();
-    await user.click(screen.getByRole("button", { name: "Expand Branch 1" }));
-    await user.click(
-      screen.getByRole("button", { name: "Expand Anna Blackwood" }),
-    );
+    await user.click(toggle(/Branch 1/, "Expand"));
+    await user.click(toggle(/Anna Blackwood/, "Expand"));
 
     expect(row(/Company/)).toHaveAttribute("aria-level", "1");
     expect(row(/Branch 1/)).toHaveAttribute("aria-level", "2");

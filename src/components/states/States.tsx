@@ -78,6 +78,6 @@ export function DataError({ error, onRetry }: DataErrorProps) {
 }
 
 /** Quiet placeholder for the chart, which has no numbers to draw. */
-export function ChartUnavailable() {
-  return <p className="chart-unavailable">No data to chart yet.</p>;
+export function ChartUnavailable({ message }: { message: string }) {
+  return <p className="chart-unavailable">{message}</p>;
 }

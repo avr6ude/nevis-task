@@ -5,15 +5,16 @@ import { Group } from "@visx/group";
 import { scaleBand, scaleLinear, scaleOrdinal } from "@visx/scale";
 import { BarStack } from "@visx/shape";
 import { useTooltip, useTooltipInPortal } from "@visx/tooltip";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Legend } from "./Legend";
 import "./ClientsChart.css";
 
 export interface ClientsChartProps {
   stack: ChildStack;
   scopeLabel: string;
-  height?: number;
 }
+
+const HEIGHT = 360;
 
 const MARGIN = { top: 8, right: 8, bottom: 28, left: 36 } as const;
 
@@ -28,12 +29,6 @@ const PALETTE = [
   "var(--chart-5)",
   "var(--chart-6)",
 ];
-
-function niceCeiling(max: number): number {
-  if (max <= 0) return 10;
-  const step = max <= 50 ? 10 : max <= 200 ? 50 : 100;
-  return Math.ceil(max / step) * step;
-}
 
 interface TooltipDatum {
   monthIndex: number;
@@ -54,6 +49,7 @@ function InnerChart({
 
   const keys = useMemo(() => series.map((s) => s.key), [series]);
   const scopeKey = keys.join("|");
+  const clipPrefix = useId();
 
   const colorScale = useMemo(
     () =>
@@ -77,7 +73,7 @@ function InnerChart({
   const yScale = useMemo(
     () =>
       scaleLinear<number>({
-        domain: [0, niceCeiling(Math.max(1, ...data.map((d) => d.total)))],
+        domain: [0, Math.max(1, ...data.map((d) => d.total))],
         range: [innerHeight, 0],
         nice: true,
       }),
@@ -186,7 +182,7 @@ function InnerChart({
                 const bottomY = Math.max(
                   ...segments.map((s) => s.bar.y + s.bar.height),
                 );
-                const clipId = `bar-clip-${monthIndex}`;
+                const clipId = `${clipPrefix}-bar-${monthIndex}`;
 
                 return (
                   <g
@@ -312,25 +308,53 @@ function useElementWidth() {
   return [ref, width] as const;
 }
 
-export function ClientsChart({
-  stack,
-  scopeLabel,
-  height = 360,
-}: ClientsChartProps) {
+export function ClientsChart({ stack, scopeLabel }: ClientsChartProps) {
   const [plotRef, width] = useElementWidth();
+  const captionId = useId();
 
   return (
-    <figure className="chart">
+    <figure className="chart" aria-labelledby={captionId}>
       <figcaption className="visually-hidden">
         Stacked bar chart of monthly client counts for {scopeLabel}, split by
         the level directly beneath it. The same figures are in the table below.
       </figcaption>
-      <div className="chart__plot" style={{ height }} ref={plotRef}>
+      <div className="chart__plot" style={{ height: HEIGHT }} ref={plotRef}>
         {width > 0 && (
-          <InnerChart stack={stack} width={width} height={height} />
+          <InnerChart stack={stack} width={width} height={HEIGHT} />
         )}
       </div>
       <Legend series={stack.series} palette={PALETTE} />
+      <ChartDataTable stack={stack} scopeLabel={scopeLabel} />
     </figure>
+  );
+}
+
+function ChartDataTable({ stack, scopeLabel }: ClientsChartProps) {
+  return (
+    <table className="visually-hidden">
+      <caption>Chart data for {scopeLabel}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Month</th>
+          {stack.series.map((s) => (
+            <th scope="col" key={s.key}>
+              {s.label}
+            </th>
+          ))}
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {stack.data.map((datum) => (
+          <tr key={datum.month}>
+            <th scope="row">{datum.month}</th>
+            {stack.series.map((s) => (
+              <td key={s.key}>{(datum[s.key] as number).toLocaleString()}</td>
+            ))}
+            <td>{datum.total.toLocaleString()}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
