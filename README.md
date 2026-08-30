@@ -6,8 +6,7 @@ it stacks whichever level sits directly beneath the row you have drilled into.
 
 ## Run
 
-Needs Node `^20.19 || ^22.13 || >=24` (Vite, Vitest and jsdom each pull the
-floor up in different places).
+Needs Node 24.
 
 ```bash
 npm install
@@ -22,13 +21,15 @@ Tests cover the two things the brief names: how the data maps into the chart
 (`src/domain/childStack.test.ts`) and expand and collapse by pointer and
 keyboard (`src/components/ClientsTable/ClientsTable.test.tsx`).
 
-`GET /api/clients` returns the dataset, photos come from
-`GET /api/avatars/:file`. Both ends validate against one Zod schema
+`GET /api/clients` returns the months and the tree, photos come from
+`GET /api/avatars/:file`. The client renders whatever periods it is given
+rather than owning a month list. Both ends validate against one Zod schema
 (`src/domain/schema.ts`): the server refuses to boot on bad data, the client
-rejects a response that does not match. The client forwards three query params
-from its own URL so the states can be checked by hand: `/?delay=6000` for
-loading, `/?fail=1` for the error, `/?bad=1` for a malformed payload. Running
-without the API (`npm run dev:web`) also errors.
+rejects a response that does not match, and every node's `values` has to line
+up with `months`. The client forwards three query params from its own URL so
+the states can be checked by hand: `/?delay=6000` for loading, `/?fail=1` for
+the error, `/?bad=1` for a malformed payload. Running without the API
+(`npm run dev:web`) also errors.
 
 ## Assumptions
 
